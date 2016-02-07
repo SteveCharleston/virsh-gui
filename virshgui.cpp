@@ -8,6 +8,8 @@ VirshGui::VirshGui(QWidget *parent) :
     ui(new Ui::VirshGui)
 {
     ui->setupUi(this);
+    ui->splitter->setStretchFactor(0, 0);
+    ui->splitter->setStretchFactor(1, 1);
     connect(ui->connectButton, SIGNAL(clicked(bool)), this, SLOT(makeSSHConnection()));
 }
 

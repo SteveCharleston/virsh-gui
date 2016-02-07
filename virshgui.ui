@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>969</width>
-    <height>472</height>
+    <width>937</width>
+    <height>481</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -89,7 +89,14 @@
         </sizepolicy>
        </property>
       </widget>
-      <widget class="QTextBrowser" name="vmInfoText"/>
+      <widget class="QTextBrowser" name="vmInfoText">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Maximum" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
      </widget>
     </item>
    </layout>
@@ -99,7 +106,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>969</width>
+     <width>937</width>
      <height>25</height>
     </rect>
    </property>
