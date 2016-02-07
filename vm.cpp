@@ -13,6 +13,8 @@ VM::VM(SSHCommunication *ssh, int id, string name, VMStatus status)
     this->status = status;
 }
 
+VM::~VM() {}
+
 int VM::getID()
 {
     return id;

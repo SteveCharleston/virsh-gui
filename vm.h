@@ -3,9 +3,9 @@
 #include <iostream>
 #include <string>
 #include <libssh/libsshpp.hpp>
-#include "sshcommunication.h"
 
 using namespace std;
+class SSHCommunication;
 enum class VMStatus {
         running,
         idle,

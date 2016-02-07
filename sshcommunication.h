@@ -4,13 +4,14 @@
 #include <map>
 #include <string>
 #include <libssh/libsshpp.hpp>
+#include "vm.h"
 
 using namespace std;
 class SSHCommunication
 {
 public:
     SSHCommunication(string user, string password, string host, int port);
-    map<string, string> listVMs();
+    map<string, VM> listVMs();
     string execCmd(string cmd);
 private:
     ssh::Session *sshConnection;
