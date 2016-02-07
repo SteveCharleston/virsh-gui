@@ -1,0 +1,54 @@
+@startuml
+skinparam linetype ortho
+
+package Ui {
+    class VirshGui {
+        - ui : VirshGui
+        - ssh : SSHCommunication*
+        - vms : map<String, VM>
+        VirshGui(parent : QWidget = 0)
+        ~VirshGui()
+        + makeSSHConnection()
+        }
+
+    class SSHCommunication {
+        - sshConnection : ssh::Session*
+        - user : string
+        - password : string
+        - host : string
+        - port : int
+        SSHCommunication(user : string, password : string, host : string, port : int)
+        + listVMs() : string
+        + execCmd(cmd : string)
+    }
+
+    class VM {
+        - ssh : SSHCommunication*
+        - id : int
+        - name : string
+        - status : VMStatus
+        VM(ssh : SSHCommunication*, id : int, name : string, status : VMStatus)
+        + getID() : int
+        + getName() : string
+        + getStatus() : VMStatus
+        }
+
+    enum VMStatus <<enum>> {
+        running
+        idle
+        paused
+        shutdown
+        shutoff
+        crashed
+        dying
+        pmsuspended
+    }
+
+    VirshGui --> SSHCommunication
+    VirshGui --> VM
+    VM --> SSHCommunication
+    VM --> VMStatus
+}
+@enduml
+#Args in method
+dwea : jkpxw
