@@ -1,5 +1,5 @@
-#include "virshgui.h"
 #include <QApplication>
+#include "virshgui.h"
 
 int main(int argc, char *argv[])
 {
