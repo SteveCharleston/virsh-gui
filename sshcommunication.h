@@ -1,6 +1,7 @@
 #ifndef SSHCOMMUNICATION_H
 #define SSHCOMMUNICATION_H
 #include <iostream>
+#include <map>
 #include <string>
 #include <libssh/libsshpp.hpp>
 
@@ -9,7 +10,7 @@ class SSHCommunication
 {
 public:
     SSHCommunication(string user, string password, string host, int port);
-    string listVMs();
+    map<string, string> listVMs();
     string execCmd(string cmd);
 private:
     ssh::Session *sshConnection;

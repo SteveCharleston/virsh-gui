@@ -1,5 +1,7 @@
 #include <iostream>
+#include <map>
 #include <string>
+#include <sstream>
 #include "sshcommunication.h"
 
 using namespace std;
@@ -22,10 +24,30 @@ SSHCommunication::SSHCommunication(string user, string password, string host, in
     sshConnection->userauthPassword(password.c_str());
 }
 
-string SSHCommunication::listVMs() {
+map<string, string> SSHCommunication::listVMs() {
+    string out, tmp;
     string cmd = "virsh list --all";
+    istringstream vmlistStream(execCmd(cmd));
+    map<string, string> vmlist;
 
-    return execCmd(cmd);
+    getline(vmlistStream, tmp);
+    getline(vmlistStream, tmp);
+
+    string id, name, status;
+    vmlistStream >> id;
+    vmlistStream >> name;
+    vmlistStream >> status;
+    //while (getline(vmlistStream, tmp)) {
+    //    out.append(tmp);
+    //}
+
+    std::cout
+        << "id: " << id
+        << "name: " << name
+        << "status: " << status
+        << std::endl;
+
+    return vmlist;
 }
 
 string SSHCommunication::execCmd(string cmd) {

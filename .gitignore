@@ -79,3 +79,4 @@ Session.vim
 .ycm_extra_conf.pyc
 tags
 virsh-gui
+*.svg

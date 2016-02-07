@@ -14,11 +14,15 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         virshgui.cpp \
-    sshcommunication.cpp
+        sshcommunication.cpp \
+        vm.cpp
 
 HEADERS  += virshgui.h \
-    sshcommunication.h
+    sshcommunication.h \
+    vm.h
 
 FORMS    += virshgui.ui
 
 LIBS += -lssh
+
+CONFIG += c++11
