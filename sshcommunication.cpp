@@ -35,16 +35,41 @@ map<string, VM> SSHCommunication::listVMs() {
     getline(vmlistStream, tmp);
 
     while (vmlistStream) {
-        string id, name, status;
-        vmlistStream >> id >> name >> status; // split on whitespace
-        if (status.empty()) {
+        string id, name, strstatus;
+        VMStatus vmstatus;
+
+        vmlistStream >> id >> name >> strstatus; // split on whitespace
+
+        if (strstatus.empty()) {
             break;
+        } else if (strstatus == "running") {
+            vmstatus = VMStatus::running;
+        } else if (strstatus == "idle") {
+            vmstatus = VMStatus::idle;
+        } else if (strstatus == "paused") {
+            vmstatus = VMStatus::paused;
+        } else if (strstatus == "shutdown") {
+            vmstatus = VMStatus::shutdown;
+        } else if (strstatus == "shut off") {
+            vmstatus = VMStatus::shutoff;
+        } else if (strstatus == "crashed") {
+            vmstatus = VMStatus::crashed;
+        } else if (strstatus == "dying") {
+            vmstatus = VMStatus::dying;
+        } else if (strstatus == "pmsuspended") {
+            vmstatus = VMStatus::pmsuspended;
+        } else {
+            vmstatus = VMStatus::unknown;
         }
 
+        VM tmpVM(this, id, name, vmstatus);
+        //VM *tmpVM = new VM(this, id, name, vmstatus);
+
+        vmlist[name] = tmpVM;
         std::cout
             << "id: " << id
             << " name: " << name
-            << " status: " << status
+            << " status: " << strstatus
             << std::endl;
     }
 

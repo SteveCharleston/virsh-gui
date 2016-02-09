@@ -7,6 +7,7 @@
 using namespace std;
 class SSHCommunication;
 enum class VMStatus {
+        unknown,
         running,
         idle,
         paused,
@@ -16,18 +17,21 @@ enum class VMStatus {
         dying,
         pmsuspended,
 };
+
 class VM
 {
 public:
-    VM (SSHCommunication *ssh, int id, string name, VMStatus status);
+    VM (SSHCommunication *ssh, string id, string name, VMStatus status);
+    VM(const VM &vm);
     ~VM ();
-    int getID();
+    string getID();
     string getName();
     VMStatus getStatus();
+    friend ostream & operator<<(ostream &out, VM &vm);
 
 private:
     SSHCommunication *ssh;
-    int id;
+    string id;
     string name;
     VMStatus status;
 };
