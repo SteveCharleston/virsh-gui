@@ -75,10 +75,14 @@ void VirshGui::populateBookmarkList()
         istringstream linestream(line);
         ostringstream out;
         string host, port, user, password;
+
         linestream >> host >> port >> user >> password;
-        std::cout << host << std::endl;
-        out << user << "@" << host << ":" << port;
-        ui->bookmarList->addItem(out.str().c_str());
+
+        if (! host.empty() && host[0] != '#') {
+            std::cout << host << std::endl;
+            out << user << "@" << host << ":" << port;
+            ui->bookmarList->addItem(out.str().c_str());
+        }
     }
 
     bookmarkFile.close();
