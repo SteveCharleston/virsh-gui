@@ -1,7 +1,12 @@
 #include <string>
+#include <iostream>
+#include <fstream>
+#include <sstream>
 #include "virshgui.h"
 #include "ui_virshgui.h"
 #include "sshcommunication.h"
+
+using namespace std;
 
 VirshGui::VirshGui(QWidget *parent) :
     QMainWindow(parent),
@@ -11,7 +16,9 @@ VirshGui::VirshGui(QWidget *parent) :
     ui->splitter->setStretchFactor(0, 0);
     ui->splitter->setStretchFactor(1, 1);
     ui->vmListTable->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+    populateBookmarkList();
     connect(ui->connectButton, SIGNAL(clicked(bool)), this, SLOT(makeSSHConnection()));
+    connect(ui->bookmarList, SIGNAL(currentIndexChanged(int)), this, SLOT(fillLoginForm(int)));
 }
 
 VirshGui::~VirshGui()
@@ -21,7 +28,6 @@ VirshGui::~VirshGui()
 
 void VirshGui::makeSSHConnection()
 {
-    //bool ok;
     string user = ui->userEdit->text().toStdString();
     string password = ui->passwordEdit->text().toStdString();
     string host = ui->hostEdit->text().toStdString();
@@ -50,9 +56,56 @@ void VirshGui::populateVMList(map<string, VM> vmlist)
         ui->vmListTable->setItem(row, 0, id);
         ui->vmListTable->setItem(row, 1, name);
         ui->vmListTable->setItem(row, 2, status);
-        //ui->vmListTable->setItem(0, col, new QTableWidgetItem("foo"));
-        //ui->vmListTable->setItem(1, col, new QTableWidgetItem("bar"));
-        //ui->vmListTable->setItem(2, col, new QTableWidgetItem("baz"));
+
         row++;
     }
+}
+void VirshGui::populateBookmarkList()
+{
+    ifstream bookmarkFile;
+    string line;
+
+    bookmarkFile.open("bookmarks.xml", ios::in);
+    if (! bookmarkFile.is_open()) {
+        return;
+    }
+
+    ui->bookmarList->addItem("");
+    while (getline(bookmarkFile, line)) {
+        istringstream linestream(line);
+        ostringstream out;
+        string host, port, user, password;
+        linestream >> host >> port >> user >> password;
+        std::cout << host << std::endl;
+        out << user << "@" << host << ":" << port;
+        ui->bookmarList->addItem(out.str().c_str());
+    }
+
+    bookmarkFile.close();
+}
+
+void VirshGui::fillLoginForm(int hostidx)
+{
+    ifstream bookmarkFile;
+    string line;
+
+    bookmarkFile.open("bookmarks.xml", ios::in);
+    if (! bookmarkFile.is_open()) {
+        return;
+    }
+
+    for (int i = 0; i < hostidx; ++i) {
+        getline(bookmarkFile, line);
+    }
+
+    istringstream linestream(line);
+    string host, port, user, password;
+    linestream >> host >> port >> user >> password;
+
+    ui->hostEdit->setText(host.c_str());
+    ui->portEdit->setText(port.c_str());
+    ui->userEdit->setText(user.c_str());
+    ui->passwordEdit->setText(password.c_str());
+
+    bookmarkFile.close();
 }

@@ -5,6 +5,8 @@
 #include <map>
 #include "sshcommunication.h"
 
+using namespace std;
+
 namespace Ui {
 class VirshGui;
 }
@@ -19,12 +21,14 @@ public:
 
 public slots:
     void makeSSHConnection();
+    void fillLoginForm(int);
 
 private:
     Ui::VirshGui *ui;
     SSHCommunication *ssh;
     map<string, VM> vmlist;
     void populateVMList(map<string, VM>);
+    void populateBookmarkList();
 };
 
 #endif // VIRSHGUI_H

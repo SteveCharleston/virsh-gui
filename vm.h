@@ -5,6 +5,7 @@
 #include <libssh/libsshpp.hpp>
 
 using namespace std;
+
 class SSHCommunication;
 enum class VMStatus {
         unknown,
