@@ -79,7 +79,7 @@ void VirshGui::populateBookmarkList()
         linestream >> host >> port >> user >> password;
 
         if (! host.empty() && host[0] != '#') {
-            std::cout << host << std::endl;
+            //std::cout << host << std::endl;
             out << user << "@" << host << ":" << port;
             ui->bookmarList->addItem(out.str().c_str());
         }
@@ -111,7 +111,7 @@ void VirshGui::fillLoginForm(int hostidx)
 
 
     while (getline(bookmarkFile, line) && count <= hostidx) {
-        std::cout << count << ": " << line << std::endl;
+        //std::cout << count << ": " << line << std::endl;
         istringstream linestream(line);
         linestream >> host >> port >> user >> password;
         if (host[0] != '#' && ! line.empty()) {

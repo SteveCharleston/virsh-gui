@@ -171,6 +171,9 @@
        <property name="sortingEnabled">
         <bool>true</bool>
        </property>
+       <property name="cornerButtonEnabled">
+        <bool>true</bool>
+       </property>
        <property name="columnCount">
         <number>3</number>
        </property>
@@ -186,11 +189,18 @@
        <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
         <bool>true</bool>
        </attribute>
+       <attribute name="verticalHeaderVisible">
+        <bool>false</bool>
+       </attribute>
        <column/>
        <column/>
        <column/>
       </widget>
-      <widget class="QTextBrowser" name="vmInfoText"/>
+      <widget class="QGroupBox" name="groupBox">
+       <property name="title">
+        <string>GroupBox</string>
+       </property>
+      </widget>
      </widget>
     </item>
    </layout>

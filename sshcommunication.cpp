@@ -26,7 +26,7 @@ SSHCommunication::SSHCommunication(string user, string password, string host, in
 }
 
 map<string, VM> SSHCommunication::listVMs() {
-    string out, tmp;
+    string out, tmp, vmlistLine;
     string cmd = "virsh list --all";
     istringstream vmlistStream(execCmd(cmd));
     map<string, VM> vmlist;
@@ -34,11 +34,13 @@ map<string, VM> SSHCommunication::listVMs() {
     getline(vmlistStream, tmp);
     getline(vmlistStream, tmp);
 
-    while (vmlistStream) {
+    while (getline(vmlistStream, vmlistLine)) {
+        istringstream vmlistLineStream(vmlistLine);
         string id, name, strstatus;
         VMStatus vmstatus;
 
-        vmlistStream >> id >> name >> strstatus; // split on whitespace
+        vmlistLineStream >> id >> name >> strstatus; // split on whitespace
+        cout << id << name << strstatus << endl;
 
         if (strstatus.empty()) {
             break;
