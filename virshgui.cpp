@@ -19,6 +19,7 @@ VirshGui::VirshGui(QWidget *parent) :
     populateBookmarkList();
     connect(ui->connectButton, SIGNAL(clicked(bool)), this, SLOT(makeSSHConnection()));
     connect(ui->bookmarList, SIGNAL(currentIndexChanged(int)), this, SLOT(fillLoginForm(int)));
+    connect(ui->vmListTable, SIGNAL(cellClicked(int, int)), this, SLOT(vmChosen(int, int)));
 }
 
 VirshGui::~VirshGui()
@@ -125,4 +126,10 @@ void VirshGui::fillLoginForm(int hostidx)
     ui->passwordEdit->setText(password.c_str());
 
     bookmarkFile.close();
+}
+
+void VirshGui::vmChosen(int row, int column)
+{
+    string vmname = ui->vmListTable->item(row, 1)->text().toStdString();
+    std::cout << vmname << std::endl;
 }

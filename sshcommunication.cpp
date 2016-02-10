@@ -26,13 +26,13 @@ SSHCommunication::SSHCommunication(string user, string password, string host, in
 }
 
 map<string, VM> SSHCommunication::listVMs() {
-    string out, tmp, vmlistLine;
+    string out, vmlistLine;
     string cmd = "virsh list --all";
     istringstream vmlistStream(execCmd(cmd));
     map<string, VM> vmlist;
 
-    getline(vmlistStream, tmp);
-    getline(vmlistStream, tmp);
+    getline(vmlistStream, vmlistLine);
+    getline(vmlistStream, vmlistLine);
 
     while (getline(vmlistStream, vmlistLine)) {
         istringstream vmlistLineStream(vmlistLine);
