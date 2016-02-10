@@ -2,6 +2,7 @@
 #define VIRSHGUI_H
 
 #include <QMainWindow>
+#include <map>
 #include "sshcommunication.h"
 
 namespace Ui {
@@ -22,6 +23,8 @@ public slots:
 private:
     Ui::VirshGui *ui;
     SSHCommunication *ssh;
+    map<string, VM> vmlist;
+    void populateVMList(map<string, VM>);
 };
 
 #endif // VIRSHGUI_H

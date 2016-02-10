@@ -50,7 +50,7 @@ map<string, VM> SSHCommunication::listVMs() {
             vmstatus = VMStatus::paused;
         } else if (strstatus == "shutdown") {
             vmstatus = VMStatus::shutdown;
-        } else if (strstatus == "shut off") {
+        } else if (strstatus == "shut") {
             vmstatus = VMStatus::shutoff;
         } else if (strstatus == "crashed") {
             vmstatus = VMStatus::crashed;
@@ -62,15 +62,12 @@ map<string, VM> SSHCommunication::listVMs() {
             vmstatus = VMStatus::unknown;
         }
 
-        VM tmpVM(this, id, name, vmstatus);
-        //VM *tmpVM = new VM(this, id, name, vmstatus);
-
-        vmlist[name] = tmpVM;
-        std::cout
-            << "id: " << id
-            << " name: " << name
-            << " status: " << strstatus
-            << std::endl;
+        vmlist[name] = VM(this, id, name, vmstatus);
+        //std::cout
+        //    << "id: " << id
+        //    << " name: " << name
+        //    << " status: " << strstatus
+        //    << std::endl;
     }
 
     return vmlist;
@@ -80,6 +77,8 @@ string SSHCommunication::execCmd(string cmd) {
     int nbytes;
     char buffer[256];
     string output;
+
+    cmd.insert(0, "LANG=C ");
 
     ssh::Channel chan(*sshConnection);
     chan.openSession();

@@ -5,6 +5,8 @@
 
 using namespace std;
 
+VM::VM() : ssh(), id(), name(), status(VMStatus::unknown) { }
+
 VM::VM(SSHCommunication *ssh, string id, string name, VMStatus status)
 {
     this->ssh = ssh;
@@ -13,15 +15,42 @@ VM::VM(SSHCommunication *ssh, string id, string name, VMStatus status)
     this->status = status;
 }
 
-VM(const VM &vm)
-{
-    ssh = vm.ssh;
-    id = vm.id;
-    name = vm.name;
-    status = vm.status;
-}
+//VM(const VM &vm)
+//{
+//    ssh = vm.ssh;
+//    id = vm.id;
+//    name = vm.name;
+//    status = vm.status;
+//}
 
-VM::~VM() {}
+VM::~VM() { }
+
+string VM::statusToString(VMStatus status)
+{
+    string vmstatus;
+
+    if (status == VMStatus::running) {
+        vmstatus = "running";
+    } else if (status == VMStatus::idle) {
+        vmstatus = "idle";
+    } else if (status == VMStatus::paused) {
+        vmstatus = "paused";
+    } else if (status == VMStatus::shutdown) {
+        vmstatus = "shutdown";
+    } else if (status ==VMStatus::shutoff) {
+        vmstatus = "shut off";
+    } else if (status == VMStatus::crashed) {
+        vmstatus = "crashed";
+    } else if (status == VMStatus::dying) {
+        vmstatus = "dying";
+    } else if (status == VMStatus::pmsuspended) {
+        vmstatus = "pmsuspended";
+    } else {
+        vmstatus = "unknown";
+    }
+
+    return vmstatus;
+}
 
 string VM::getID()
 {

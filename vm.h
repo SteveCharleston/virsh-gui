@@ -21,12 +21,14 @@ enum class VMStatus {
 class VM
 {
 public:
+    VM();
     VM (SSHCommunication *ssh, string id, string name, VMStatus status);
-    VM(const VM &vm);
+    //VM(const VM &vm);
     ~VM ();
     string getID();
     string getName();
     VMStatus getStatus();
+    static string statusToString(VMStatus status);
     friend ostream & operator<<(ostream &out, VM &vm);
 
 private:

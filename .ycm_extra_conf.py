@@ -50,6 +50,7 @@ flags = [
     '-I/usr/lib/x86_64-linux-gnu/qt4/mkspecs/linux-clang',
     '-W',
     '-Wall',
+    '-std=c++11',
 ]
 
 
