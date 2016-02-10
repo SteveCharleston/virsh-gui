@@ -131,5 +131,6 @@ void VirshGui::fillLoginForm(int hostidx)
 void VirshGui::vmChosen(int row, int column)
 {
     string vmname = ui->vmListTable->item(row, 1)->text().toStdString();
-    std::cout << vmname << std::endl;
+    string vmxml = ssh->dumpXML(vmname);
+    ui->xmlDisplay->setText(QString::fromStdString(vmxml));
 }

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>937</width>
-    <height>481</height>
+    <width>942</width>
+    <height>669</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -204,8 +204,33 @@
        <column/>
        <column/>
       </widget>
-      <widget class="QWidget" name="gridLayoutWidget">
-       <layout class="QGridLayout" name="gridLayout"/>
+      <widget class="QTabWidget" name="tabWidget">
+       <widget class="QWidget" name="tab">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <attribute name="title">
+         <string>Tab 1</string>
+        </attribute>
+        <widget class="QTextBrowser" name="xmlDisplay">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>256</width>
+           <height>192</height>
+          </rect>
+         </property>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="tab_2">
+        <attribute name="title">
+         <string>Tab 2</string>
+        </attribute>
+       </widget>
       </widget>
      </widget>
     </item>
@@ -216,7 +241,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>937</width>
+     <width>942</width>
      <height>25</height>
     </rect>
    </property>

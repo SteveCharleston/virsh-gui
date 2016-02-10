@@ -25,6 +25,27 @@ SSHCommunication::SSHCommunication(string user, string password, string host, in
     sshConnection->userauthPassword(password.c_str());
 }
 
+string SSHCommunication::execCmd(string cmd) {
+    int nbytes;
+    char buffer[256];
+    string output;
+
+    cmd.insert(0, "LANG=C ");
+
+    ssh::Channel chan(*sshConnection);
+    chan.openSession();
+    chan.requestExec(cmd.c_str());
+    nbytes = chan.read(buffer, sizeof(buffer), 0);
+
+    while (nbytes > 0) {
+        string strBuf(buffer, nbytes);
+        output.append(strBuf);
+        nbytes = chan.read(buffer, sizeof(buffer), 0);
+    }
+
+    return output;
+}
+
 map<string, VM> SSHCommunication::listVMs() {
     string out, vmlistLine;
     string cmd = "virsh list --all";
@@ -74,24 +95,8 @@ map<string, VM> SSHCommunication::listVMs() {
 
     return vmlist;
 }
-
-string SSHCommunication::execCmd(string cmd) {
-    int nbytes;
-    char buffer[256];
-    string output;
-
-    cmd.insert(0, "LANG=C ");
-
-    ssh::Channel chan(*sshConnection);
-    chan.openSession();
-    chan.requestExec(cmd.c_str());
-    nbytes = chan.read(buffer, sizeof(buffer), 0);
-
-    while (nbytes > 0) {
-        string strBuf(buffer, nbytes);
-        output.append(strBuf);
-        nbytes = chan.read(buffer, sizeof(buffer), 0);
-    }
-
-    return output;
+string SSHCommunication::dumpXML(string vmname)
+{
+    string cmd = "virsh dumpxml " + vmname;
+    return execCmd(cmd);
 }
