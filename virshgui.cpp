@@ -92,19 +92,31 @@ void VirshGui::fillLoginForm(int hostidx)
 {
     ifstream bookmarkFile;
     string line;
+    string host, port, user, password;
+    int count = 0;
+
+    if (hostidx == 0) {
+        ui->hostEdit->setText("");
+        ui->portEdit->setText("");
+        ui->userEdit->setText("");
+        ui->passwordEdit->setText("");
+
+        return;
+    }
 
     bookmarkFile.open("bookmarks.xml", ios::in);
     if (! bookmarkFile.is_open()) {
         return;
     }
 
-    for (int i = 0; i < hostidx; ++i) {
-        getline(bookmarkFile, line);
-    }
 
-    istringstream linestream(line);
-    string host, port, user, password;
-    linestream >> host >> port >> user >> password;
+    while (getline(bookmarkFile, line) && count <= hostidx) {
+        istringstream linestream(line);
+        linestream >> host >> port >> user >> password;
+        if (! host.empty() && host[0] != '#') {
+            count++;
+        }
+    }
 
     ui->hostEdit->setText(host.c_str());
     ui->portEdit->setText(port.c_str());

@@ -19,36 +19,74 @@
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <widget class="QLabel" name="serverAddrLabel">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
         <property name="text">
          <string>Server Adresse</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="hostEdit"/>
+       <widget class="QLineEdit" name="hostEdit">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QLabel" name="portLabel">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
         <property name="text">
          <string>Port</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="portEdit"/>
+       <widget class="QLineEdit" name="portEdit">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QLabel" name="userLabel">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
         <property name="text">
          <string>Nutzer</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="userEdit"/>
+       <widget class="QLineEdit" name="userEdit">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QLabel" name="passwordLabel">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
         <property name="text">
          <string>Passwort</string>
         </property>
@@ -56,6 +94,11 @@
       </item>
       <item>
        <widget class="QLineEdit" name="passwordEdit">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
         <property name="echoMode">
          <enum>QLineEdit::Password</enum>
         </property>
@@ -63,6 +106,11 @@
       </item>
       <item>
        <widget class="QPushButton" name="connectButton">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
         <property name="text">
          <string>Connect</string>
         </property>
