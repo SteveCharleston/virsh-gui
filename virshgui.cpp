@@ -93,7 +93,7 @@ void VirshGui::fillLoginForm(int hostidx)
     ifstream bookmarkFile;
     string line;
     string host, port, user, password;
-    int count = 0;
+    int count = 1;
 
     if (hostidx == 0) {
         ui->hostEdit->setText("");
@@ -111,9 +111,10 @@ void VirshGui::fillLoginForm(int hostidx)
 
 
     while (getline(bookmarkFile, line) && count <= hostidx) {
+        std::cout << count << ": " << line << std::endl;
         istringstream linestream(line);
         linestream >> host >> port >> user >> password;
-        if (! host.empty() && host[0] != '#') {
+        if (host[0] != '#' && ! line.empty()) {
             count++;
         }
     }
