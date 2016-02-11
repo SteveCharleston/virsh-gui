@@ -13,7 +13,6 @@ public:
     SSHCommunication(string user, string password, string host, int port);
     string execCmd(string cmd);
     map<string, VM> listVMs();
-    string dumpXML(string vmname);
 private:
     ssh::Session *sshConnection;
     string user;
