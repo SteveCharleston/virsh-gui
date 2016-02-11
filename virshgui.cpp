@@ -20,6 +20,7 @@ VirshGui::VirshGui(QWidget *parent) :
     connect(ui->connectButton, SIGNAL(clicked(bool)), this, SLOT(makeSSHConnection()));
     connect(ui->bookmarList, SIGNAL(currentIndexChanged(int)), this, SLOT(fillLoginForm(int)));
     connect(ui->vmListTable, SIGNAL(cellClicked(int, int)), this, SLOT(vmChosen(int, int)));
+    connect(ui->refreshVmList, SIGNAL(clicked()), this, SLOT(refreshVmList()));
 }
 
 VirshGui::~VirshGui()
@@ -41,9 +42,12 @@ void VirshGui::makeSSHConnection()
 
 void VirshGui::populateVMList(map<string, VM> vmlist)
 {
+    bool listIsEmpty = ui->vmListTable->rowCount() == 0;
     int row = 0;
     for (auto vm : vmlist) {
-        ui->vmListTable->setRowCount(row + 1);
+        if (listIsEmpty) {
+            ui->vmListTable->setRowCount(row + 1);
+        }
         string strstatus = VM::statusToString(vm.second.getStatus());
         cout << vm.second.getID() << " " << vm.second.getName() << " " << strstatus << endl;
 
@@ -89,6 +93,14 @@ void VirshGui::populateBookmarkList()
     bookmarkFile.close();
 }
 
+void VirshGui::refreshVmList()
+{
+    std::cout << "refreshVmList" << std::endl;
+    map<string, VM> vmlist = ssh->listVMs();
+    populateVMList(vmlist);
+
+}
+
 void VirshGui::fillLoginForm(int hostidx)
 {
     ifstream bookmarkFile;
@@ -131,6 +143,6 @@ void VirshGui::fillLoginForm(int hostidx)
 void VirshGui::vmChosen(int row, int column)
 {
     string vmname = ui->vmListTable->item(row, 1)->text().toStdString();
-    string vmxml = ssh->dumpXML(vmname);
+    string vmxml = vmlist[vmname].dumpXML();
     ui->xmlDisplay->setText(QString::fromStdString(vmxml));
 }

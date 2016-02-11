@@ -23,6 +23,7 @@ public slots:
     void makeSSHConnection();
     void fillLoginForm(int);
     void vmChosen(int row, int column);
+    void refreshVmList();
 
 private:
     Ui::VirshGui *ui;

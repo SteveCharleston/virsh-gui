@@ -52,6 +52,12 @@ string VM::statusToString(VMStatus status)
     return vmstatus;
 }
 
+string VM::dumpXML()
+{
+    string cmd = "virsh dumpxml " + name;
+    return ssh->execCmd(cmd);
+}
+
 string VM::getID()
 {
     return id;

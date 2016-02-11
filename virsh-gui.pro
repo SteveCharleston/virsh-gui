@@ -15,11 +15,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
         virshgui.cpp \
         sshcommunication.cpp \
-        vm.cpp
+        vm.cpp\
+        tinyxml2/tinyxml2.cpp 
 
 HEADERS  += virshgui.h \
     sshcommunication.h \
-    vm.h
+    vm.h\
+    tinyxml2/tinyxml2.h
 
 FORMS    += virshgui.ui
 
