@@ -29,7 +29,9 @@ public:
     string getID();
     string getName();
     VMStatus getStatus();
+    string getMemory();
     string dumpXML();
+    string getUUID();
     static string statusToString(VMStatus status);
     friend ostream & operator<<(ostream &out, VM &vm);
 

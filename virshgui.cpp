@@ -36,7 +36,7 @@ void VirshGui::makeSSHConnection()
     int port = ui->portEdit->text().toInt();
     ssh = new SSHCommunication(user, password, host, port);
 
-    auto vmlist = ssh->listVMs();
+    vmlist = ssh->listVMs();
     populateVMList(vmlist);
 }
 
@@ -96,7 +96,7 @@ void VirshGui::populateBookmarkList()
 void VirshGui::refreshVmList()
 {
     std::cout << "refreshVmList" << std::endl;
-    map<string, VM> vmlist = ssh->listVMs();
+    vmlist = ssh->listVMs();
     populateVMList(vmlist);
 
 }
@@ -144,5 +144,7 @@ void VirshGui::vmChosen(int row, int column)
 {
     string vmname = ui->vmListTable->item(row, 1)->text().toStdString();
     string vmxml = vmlist[vmname].dumpXML();
+    //string vmxml = ssh->dumpXML(vmname);
     ui->xmlDisplay->setText(QString::fromStdString(vmxml));
+    cout << vmlist[vmname].getMemory() << endl;
 }

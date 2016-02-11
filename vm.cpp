@@ -1,9 +1,11 @@
 #include <iostream>
 #include <string>
+#include "tinyxml2/tinyxml2.h"
 #include "vm.h"
 #include "sshcommunication.h"
 
 using namespace std;
+using namespace tinyxml2;
 
 VM::VM() : ssh(), id(), name(), status(VMStatus::unknown) { }
 
@@ -71,6 +73,28 @@ string VM::getName()
 VMStatus VM::getStatus()
 {
     return status;
+}
+
+string VM::getMemory()
+{
+    XMLDocument doc;
+    doc.Parse(dumpXML().c_str());
+    XMLElement *memoryElem = doc.FirstChild()
+        ->FirstChildElement("memory");
+    string memory = memoryElem->GetText();
+    string memoryUnit = memoryElem->Attribute("unit");
+
+    return memory + " " + memoryUnit;
+}
+
+string VM::getUUID()
+{
+    XMLDocument doc;
+    doc.Parse(dumpXML().c_str());
+    string uuid = doc.FirstChild()
+        ->FirstChildElement("uuid")->GetText();
+
+    return uuid;
 }
 
 ostream & operator<<(ostream &out, VM &vm)

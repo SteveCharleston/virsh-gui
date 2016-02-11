@@ -61,7 +61,7 @@ map<string, VM> SSHCommunication::listVMs() {
         VMStatus vmstatus;
 
         vmlistLineStream >> id >> name >> strstatus; // split on whitespace
-        cout << id << name << strstatus << endl;
+        //cout << id << name << strstatus << endl;
 
         if (strstatus.empty()) {
             break;
@@ -95,3 +95,10 @@ map<string, VM> SSHCommunication::listVMs() {
 
     return vmlist;
 }
+
+//string SSHCommunication::dumpXML(string vmname)
+//{
+//    string cmd = "virsh dumpxml " + vmname;
+//    return execCmd(cmd);
+//}
+

@@ -43,6 +43,7 @@ flags = [
     '-D_REENTRANT',
     '-I.',
     '-I/home/steven/git/virsh-gui',
+    '-I/home/steven/git/virsh-gui/tinyxml2',
     '-I/usr/include/qt4',
     '-I/usr/include/qt4/QtCore',
     '-I/usr/include/qt4/QtGui',
