@@ -32,6 +32,7 @@ public:
     string getMemory();
     string dumpXML();
     string getUUID();
+    string getCPUCount();
     static string statusToString(VMStatus status);
     friend ostream & operator<<(ostream &out, VM &vm);
 

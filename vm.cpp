@@ -87,6 +87,16 @@ string VM::getMemory()
     return memory + " " + memoryUnit;
 }
 
+string VM::getCPUCount()
+{
+    XMLDocument doc;
+    doc.Parse(dumpXML().c_str());
+    string cpuCount = doc.FirstChild()
+        ->FirstChildElement("vcpu")->GetText();
+
+    return cpuCount;
+}
+
 string VM::getUUID()
 {
     XMLDocument doc;
