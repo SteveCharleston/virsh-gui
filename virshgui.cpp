@@ -142,9 +142,15 @@ void VirshGui::fillLoginForm(int hostidx)
 
 void VirshGui::vmChosen(int row, int column)
 {
+    Q_UNUSED(column);
     string vmname = ui->vmListTable->item(row, 1)->text().toStdString();
+    VMStatus vmstatus = vmlist[vmname].getStatus();
+    string strstatus = vmlist[vmname].statusToString(vmstatus);
+    string memory = vmlist[vmname].getMemory();
     string vmxml = vmlist[vmname].dumpXML();
     //string vmxml = ssh->dumpXML(vmname);
     ui->xmlDisplay->setText(QString::fromStdString(vmxml));
-    cout << vmlist[vmname].getMemory() << endl;
+    ui->vmnameLabel->setText(QString::fromStdString(vmname));
+    ui->statusLabel->setText(QString::fromStdString(strstatus));
+    ui->memoryLabel->setText(QString::fromStdString(memory));
 }
