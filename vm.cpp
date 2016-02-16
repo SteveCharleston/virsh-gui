@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <vector>
 #include "tinyxml2/tinyxml2.h"
 #include "vm.h"
 #include "sshcommunication.h"
@@ -73,6 +74,51 @@ string VM::getName()
 VMStatus VM::getStatus()
 {
     return status;
+}
+
+string VM::getOSType()
+{
+    XMLDocument doc;
+    doc.Parse(dumpXML().c_str());
+    string ostype = doc.FirstChild()
+        ->FirstChildElement("os")
+        ->FirstChildElement("type")
+        ->GetText();
+
+    return ostype;
+}
+
+string VM::getArch()
+{
+    XMLDocument doc;
+    doc.Parse(dumpXML().c_str());
+    string arch = doc.FirstChild()
+        ->FirstChildElement("os")
+        ->FirstChildElement("type")
+        ->Attribute("arch");
+
+    if (arch.empty()) {
+        arch = "-";
+    }
+
+    return arch;
+}
+
+vector<string> VM::getBootDevs()
+{
+    std::vector<string> boot;
+
+    XMLDocument doc;
+    doc.Parse(dumpXML().c_str());
+    XMLNode * bootNode = doc.FirstChild()
+        ->FirstChildElement("os")
+        ->FirstChildElement("boot"); // init for loop
+
+    for(; bootNode != NULL; bootNode = bootNode->NextSiblingElement("boot")) {
+        boot.push_back(bootNode->ToElement()->Attribute("dev"));
+    }
+
+    return boot;
 }
 
 string VM::getMemory()

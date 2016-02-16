@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <iterator>
 #include "virshgui.h"
 #include "ui_virshgui.h"
 #include "sshcommunication.h"
@@ -15,7 +16,7 @@ VirshGui::VirshGui(QWidget *parent) :
     ui->setupUi(this);
     ui->splitter->setStretchFactor(0, 0);
     ui->splitter->setStretchFactor(1, 1);
-    ui->vmListTable->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+    ui->vmListTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     populateBookmarkList();
     connect(ui->connectButton, SIGNAL(clicked(bool)), this, SLOT(makeSSHConnection()));
     connect(ui->bookmarList, SIGNAL(currentIndexChanged(int)), this, SLOT(fillLoginForm(int)));
@@ -148,9 +149,24 @@ void VirshGui::vmChosen(int row, int column)
     string strstatus = vmlist[vmname].statusToString(vmstatus);
     string memory = vmlist[vmname].getMemory();
     string vmxml = vmlist[vmname].dumpXML();
+    string cpuCount = vmlist[vmname].getCPUCount();
+    string ostype = vmlist[vmname].getOSType();
+    string arch = vmlist[vmname].getArch();
+    vector<string> bootDevs = vmlist[vmname].getBootDevs();
+
+    stringstream bootStream;
+    copy(bootDevs.begin(), bootDevs.end(),
+            ostream_iterator<string>(bootStream, ", "));
+    string bootDevStr = bootStream.str();
+    bootDevStr.erase(bootDevStr.end() - 2);
+
     //string vmxml = ssh->dumpXML(vmname);
     ui->xmlDisplay->setText(QString::fromStdString(vmxml));
     ui->vmnameLabel->setText(QString::fromStdString(vmname));
     ui->statusLabel->setText(QString::fromStdString(strstatus));
     ui->memoryLabel->setText(QString::fromStdString(memory));
+    ui->cpucountLabel->setText(QString::fromStdString(cpuCount));
+    ui->typeLabel->setText(QString::fromStdString(ostype));
+    ui->archLabel->setText(QString::fromStdString(arch));
+    ui->bootdevLabel->setText(QString::fromStdString(bootDevStr));
 }

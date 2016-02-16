@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1025</width>
-    <height>807</height>
+    <width>1057</width>
+    <height>865</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -235,7 +235,7 @@
             </font>
            </property>
            <property name="text">
-            <string>VM Name</string>
+            <string>VM Name:</string>
            </property>
           </widget>
          </item>
@@ -258,7 +258,7 @@
             </font>
            </property>
            <property name="text">
-            <string>Status</string>
+            <string>Status:</string>
            </property>
           </widget>
          </item>
@@ -281,7 +281,7 @@
             </font>
            </property>
            <property name="text">
-            <string>Memory</string>
+            <string>Memory:</string>
            </property>
           </widget>
          </item>
@@ -301,12 +301,12 @@
             </font>
            </property>
            <property name="text">
-            <string>TextLabel</string>
+            <string>CPUs:</string>
            </property>
           </widget>
          </item>
          <item row="4" column="0">
-          <widget class="QLabel" name="label_8">
+          <widget class="QLabel" name="label4">
            <property name="font">
             <font>
              <weight>75</weight>
@@ -314,26 +314,26 @@
             </font>
            </property>
            <property name="text">
-            <string>TextLabel</string>
+            <string>Type:</string>
            </property>
           </widget>
          </item>
          <item row="3" column="1">
-          <widget class="QLabel" name="label_9">
+          <widget class="QLabel" name="cpucountLabel">
            <property name="text">
             <string/>
            </property>
           </widget>
          </item>
          <item row="4" column="1">
-          <widget class="QLabel" name="label_10">
+          <widget class="QLabel" name="typeLabel">
            <property name="text">
             <string/>
            </property>
           </widget>
          </item>
          <item row="5" column="0">
-          <widget class="QLabel" name="label_11">
+          <widget class="QLabel" name="label_6">
            <property name="font">
             <font>
              <weight>75</weight>
@@ -341,12 +341,32 @@
             </font>
            </property>
            <property name="text">
-            <string>TextLabel</string>
+            <string>Arch:</string>
            </property>
           </widget>
          </item>
          <item row="5" column="1">
-          <widget class="QLabel" name="label_12">
+          <widget class="QLabel" name="archLabel">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="0">
+          <widget class="QLabel" name="label_3">
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Boot Devs:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="1">
+          <widget class="QLabel" name="bootdevLabel">
            <property name="text">
             <string/>
            </property>
@@ -379,7 +399,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1025</width>
+     <width>1057</width>
      <height>25</height>
     </rect>
    </property>

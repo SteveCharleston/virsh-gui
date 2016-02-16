@@ -2,6 +2,7 @@
 #define VM_H
 #include <iostream>
 #include <string>
+#include <vector>
 #include <libssh/libsshpp.hpp>
 
 using namespace std;
@@ -32,7 +33,10 @@ public:
     string getMemory();
     string dumpXML();
     string getUUID();
+    string getOSType();
+    string getArch();
     string getCPUCount();
+    vector<string> getBootDevs();
     static string statusToString(VMStatus status);
     friend ostream & operator<<(ostream &out, VM &vm);
 
