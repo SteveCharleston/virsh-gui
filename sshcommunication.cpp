@@ -2,6 +2,7 @@
 #include <map>
 #include <string>
 #include <sstream>
+#include <QtDebug>
 #include "sshcommunication.h"
 #include "vm.h"
 
@@ -30,14 +31,23 @@ string SSHCommunication::execCmd(string cmd) {
     char buffer[256];
     string output;
 
-    cmd.insert(0, "LANG=C ");
+    //cmd.insert(0, "LANG=C ");
 
     ssh::Channel chan(*sshConnection);
     chan.openSession();
+    // test
+    //chan.requestPty();
+    //chan.changePtySize(80, 24);
+    //chan.requestShell();
+    //nwritten = chan.write(cmd.c_str(), cmd.length());
+    // end test
     chan.requestExec(cmd.c_str());
+
+    qDebug() << "reading in buffer";
     nbytes = chan.read(buffer, sizeof(buffer), 0);
 
     while (nbytes > 0) {
+        qDebug() << buffer;
         string strBuf(buffer, nbytes);
         output.append(strBuf);
         nbytes = chan.read(buffer, sizeof(buffer), 0);

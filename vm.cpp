@@ -78,7 +78,7 @@ VMStatus VM::getStatus()
 
 string VM::getOSType()
 {
-    XMLDocument doc;
+    tinyxml2::XMLDocument doc;
     doc.Parse(dumpXML().c_str());
     string ostype = doc.FirstChild()
         ->FirstChildElement("os")
@@ -90,7 +90,7 @@ string VM::getOSType()
 
 string VM::getArch()
 {
-    XMLDocument doc;
+    tinyxml2::XMLDocument doc;
     doc.Parse(dumpXML().c_str());
     string arch = doc.FirstChild()
         ->FirstChildElement("os")
@@ -108,7 +108,7 @@ vector<string> VM::getBootDevs()
 {
     std::vector<string> boot;
 
-    XMLDocument doc;
+    tinyxml2::XMLDocument doc;
     doc.Parse(dumpXML().c_str());
     XMLNode * bootNode = doc.FirstChild()
         ->FirstChildElement("os")
@@ -121,9 +121,76 @@ vector<string> VM::getBootDevs()
     return boot;
 }
 
+vector<string> VM::getCPUFeatures()
+{
+    std::vector<string> cpuFeatures;
+
+    tinyxml2::XMLDocument doc;
+    doc.Parse(dumpXML().c_str());
+    XMLNode * cpuNode = doc.FirstChild()
+        ->FirstChildElement("cpu");
+
+    if (! cpuNode) {
+        std::vector<string> v;
+        v.push_back("-");
+        return v;
+    }
+    XMLNode * cpuFeatureNode = cpuNode->FirstChildElement("feature");
+
+    for(; cpuFeatureNode != NULL; cpuFeatureNode = cpuFeatureNode->NextSiblingElement("feature")) {
+        cpuFeatures.push_back(cpuFeatureNode->ToElement()->Attribute("name"));
+    }
+
+    return cpuFeatures;
+}
+
+vector<string> VM::getHVFeatures()
+{
+    std::vector<string> features;
+
+    tinyxml2::XMLDocument doc;
+    doc.Parse(dumpXML().c_str());
+    XMLNode * featureNode = doc.FirstChild()
+        ->FirstChildElement("features");
+
+    if (featureNode->FirstChildElement("acpi")) {
+        features.push_back("acpi");
+    }
+
+    if (featureNode->FirstChildElement("pae")) {
+        features.push_back("pae");
+    }
+
+    if (featureNode->FirstChildElement("apic")) {
+        features.push_back("apic");
+    }
+
+    if (featureNode->FirstChildElement("hap")) {
+        features.push_back("hap");
+    }
+
+    if (featureNode->FirstChildElement("viridian")) {
+        features.push_back("viridian");
+    }
+
+    if (featureNode->FirstChildElement("privent")) {
+        features.push_back("privent");
+    }
+
+    if (featureNode->FirstChildElement("pvspinlock")) {
+        features.push_back("pvspinlock");
+    }
+
+    if (featureNode->FirstChildElement("gic")) {
+        features.push_back("gic");
+    }
+
+    return features;
+}
+
 string VM::getMemory()
 {
-    XMLDocument doc;
+    tinyxml2::XMLDocument doc;
     doc.Parse(dumpXML().c_str());
     XMLElement *memoryElem = doc.FirstChild()
         ->FirstChildElement("memory");
@@ -135,7 +202,7 @@ string VM::getMemory()
 
 string VM::getCPUCount()
 {
-    XMLDocument doc;
+    tinyxml2::XMLDocument doc;
     doc.Parse(dumpXML().c_str());
     string cpuCount = doc.FirstChild()
         ->FirstChildElement("vcpu")->GetText();
@@ -145,7 +212,7 @@ string VM::getCPUCount()
 
 string VM::getUUID()
 {
-    XMLDocument doc;
+    tinyxml2::XMLDocument doc;
     doc.Parse(dumpXML().c_str());
     string uuid = doc.FirstChild()
         ->FirstChildElement("uuid")->GetText();

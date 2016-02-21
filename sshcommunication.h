@@ -3,7 +3,7 @@
 #include <iostream>
 #include <map>
 #include <string>
-#include <libssh/libsshpp.hpp>
+#include "libsshpp.hpp"
 #include "vm.h"
 
 using namespace std;

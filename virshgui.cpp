@@ -9,6 +9,17 @@
 
 using namespace std;
 
+string join(vector<string> list, const char* delim)
+{
+    stringstream liststream;
+    copy(list.begin(), list.end(),
+            ostream_iterator<string>(liststream, delim));
+    string joinstr = liststream.str();
+    joinstr.erase(joinstr.end() - 2);
+
+    return joinstr;
+}
+
 VirshGui::VirshGui(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::VirshGui)
@@ -22,6 +33,7 @@ VirshGui::VirshGui(QWidget *parent) :
     connect(ui->bookmarList, SIGNAL(currentIndexChanged(int)), this, SLOT(fillLoginForm(int)));
     connect(ui->vmListTable, SIGNAL(cellClicked(int, int)), this, SLOT(vmChosen(int, int)));
     connect(ui->refreshVmList, SIGNAL(clicked()), this, SLOT(refreshVmList()));
+    std::cout << "program started" << std::endl;
 }
 
 VirshGui::~VirshGui()
@@ -153,12 +165,12 @@ void VirshGui::vmChosen(int row, int column)
     string ostype = vmlist[vmname].getOSType();
     string arch = vmlist[vmname].getArch();
     vector<string> bootDevs = vmlist[vmname].getBootDevs();
+    vector<string> hvFeatures = vmlist[vmname].getHVFeatures();
+    vector<string> cpuFeatures = vmlist[vmname].getCPUFeatures();
 
-    stringstream bootStream;
-    copy(bootDevs.begin(), bootDevs.end(),
-            ostream_iterator<string>(bootStream, ", "));
-    string bootDevStr = bootStream.str();
-    bootDevStr.erase(bootDevStr.end() - 2);
+    string bootDevStr = join(bootDevs, ", ");
+    string hvFeatureStr = join(hvFeatures, ", ");
+    string cpuFeatureStr = join(cpuFeatures, ", ");
 
     //string vmxml = ssh->dumpXML(vmname);
     ui->xmlDisplay->setText(QString::fromStdString(vmxml));
@@ -169,4 +181,6 @@ void VirshGui::vmChosen(int row, int column)
     ui->typeLabel->setText(QString::fromStdString(ostype));
     ui->archLabel->setText(QString::fromStdString(arch));
     ui->bootdevLabel->setText(QString::fromStdString(bootDevStr));
+    ui->hvFeaturesLabel->setText(QString::fromStdString(hvFeatureStr));
+    ui->cpuFeaturesLabel->setText(QString::fromStdString("-"));
 }

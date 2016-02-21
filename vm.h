@@ -34,6 +34,8 @@ public:
     string dumpXML();
     string getUUID();
     string getOSType();
+    vector<string> getHVFeatures();
+    vector<string> getCPUFeatures();
     string getArch();
     string getCPUCount();
     vector<string> getBootDevs();
