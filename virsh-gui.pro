@@ -28,5 +28,6 @@ FORMS    += virshgui.ui
 LIBS += -lssh
 
 CONFIG += c++11 debug_and_release console
-QMAKE_CXXFLAGS += -std=c++11
+QMAKE_CXXFLAGS += -std=c++11 -g
+#DEFINES += "_WIN32"
 #QMAKE_LFLAGS += -static

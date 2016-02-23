@@ -28,12 +28,12 @@ VirshGui::VirshGui(QWidget *parent) :
     ui->splitter->setStretchFactor(0, 0);
     ui->splitter->setStretchFactor(1, 1);
     ui->vmListTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->vmListTable->setHorizontalHeaderLabels(QStringList() << "ID" << "Name" << "Status");
     populateBookmarkList();
     connect(ui->connectButton, SIGNAL(clicked(bool)), this, SLOT(makeSSHConnection()));
     connect(ui->bookmarList, SIGNAL(currentIndexChanged(int)), this, SLOT(fillLoginForm(int)));
     connect(ui->vmListTable, SIGNAL(cellClicked(int, int)), this, SLOT(vmChosen(int, int)));
     connect(ui->refreshVmList, SIGNAL(clicked()), this, SLOT(refreshVmList()));
-    std::cout << "program started" << std::endl;
 }
 
 VirshGui::~VirshGui()
@@ -62,7 +62,7 @@ void VirshGui::populateVMList(map<string, VM> vmlist)
             ui->vmListTable->setRowCount(row + 1);
         }
         string strstatus = VM::statusToString(vm.second.getStatus());
-        cout << vm.second.getID() << " " << vm.second.getName() << " " << strstatus << endl;
+        //cout << vm.second.getID() << " " << vm.second.getName() << " " << strstatus << endl;
 
         QTableWidgetItem *id = new QTableWidgetItem(
                 QString::fromStdString(vm.second.getID()));
@@ -108,7 +108,7 @@ void VirshGui::populateBookmarkList()
 
 void VirshGui::refreshVmList()
 {
-    std::cout << "refreshVmList" << std::endl;
+    //std::cout << "refreshVmList" << std::endl;
     vmlist = ssh->listVMs();
     populateVMList(vmlist);
 
@@ -172,7 +172,6 @@ void VirshGui::vmChosen(int row, int column)
     string hvFeatureStr = join(hvFeatures, ", ");
     string cpuFeatureStr = join(cpuFeatures, ", ");
 
-    //string vmxml = ssh->dumpXML(vmname);
     ui->xmlDisplay->setText(QString::fromStdString(vmxml));
     ui->vmnameLabel->setText(QString::fromStdString(vmname));
     ui->statusLabel->setText(QString::fromStdString(strstatus));
@@ -182,5 +181,7 @@ void VirshGui::vmChosen(int row, int column)
     ui->archLabel->setText(QString::fromStdString(arch));
     ui->bootdevLabel->setText(QString::fromStdString(bootDevStr));
     ui->hvFeaturesLabel->setText(QString::fromStdString(hvFeatureStr));
-    ui->cpuFeaturesLabel->setText(QString::fromStdString("-"));
+    ui->hvFeaturesLabel->setWordWrap(true);
+    ui->cpuFeaturesLabel->setText(QString::fromStdString(cpuFeatureStr));
+    ui->cpuFeaturesLabel->setWordWrap(true);
 }

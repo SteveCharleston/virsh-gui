@@ -31,7 +31,7 @@ string SSHCommunication::execCmd(string cmd) {
     char buffer[256];
     string output;
 
-    //cmd.insert(0, "LANG=C ");
+    cmd.insert(0, "LANG=C ");
 
     ssh::Channel chan(*sshConnection);
     chan.openSession();
@@ -52,6 +52,9 @@ string SSHCommunication::execCmd(string cmd) {
         output.append(strBuf);
         nbytes = chan.read(buffer, sizeof(buffer), 0);
     }
+
+    chan.sendEof();
+    chan.close();
 
     return output;
 }
