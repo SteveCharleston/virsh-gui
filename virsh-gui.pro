@@ -16,12 +16,14 @@ SOURCES += main.cpp\
         virshgui.cpp \
         sshcommunication.cpp \
         vm.cpp\
-        tinyxml2/tinyxml2.cpp 
+        tinyxml2/tinyxml2.cpp\
+        basic-xml-syntax-highlighter/basic-xml-syntax-highlighter/BasicXMLSyntaxHighlighter.cpp
 
 HEADERS  += virshgui.h \
     sshcommunication.h \
     vm.h\
-    tinyxml2/tinyxml2.h
+    tinyxml2/tinyxml2.h\
+    basic-xml-syntax-highlighter/basic-xml-syntax-highlighter/BasicXMLSyntaxHighlighter.h
 
 FORMS    += virshgui.ui
 

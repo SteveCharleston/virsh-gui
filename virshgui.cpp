@@ -6,6 +6,7 @@
 #include "virshgui.h"
 #include "ui_virshgui.h"
 #include "sshcommunication.h"
+#include "basic-xml-syntax-highlighter/basic-xml-syntax-highlighter/BasicXMLSyntaxHighlighter.h"
 
 using namespace std;
 
@@ -156,6 +157,10 @@ void VirshGui::fillLoginForm(int hostidx)
 void VirshGui::vmChosen(int row, int column)
 {
     Q_UNUSED(column);
+
+    BasicXMLSyntaxHighlighter *highlighter = new BasicXMLSyntaxHighlighter(ui->xmlDisplay);
+    Q_UNUSED(highlighter);
+
     string vmname = ui->vmListTable->item(row, 1)->text().toStdString();
     VMStatus vmstatus = vmlist[vmname].getStatus();
     string strstatus = vmlist[vmname].statusToString(vmstatus);
