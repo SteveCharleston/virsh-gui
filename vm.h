@@ -34,6 +34,7 @@ public:
     string dumpXML();
     string getUUID();
     string getOSType();
+    vector<string> getHDDImages();
     vector<string> getHVFeatures();
     vector<string> getCPUFeatures();
     string getArch();

@@ -121,6 +121,29 @@ vector<string> VM::getBootDevs()
     return boot;
 }
 
+vector<string> VM::getHDDImages()
+{
+    std::vector<string> hddImages;
+
+    tinyxml2::XMLDocument doc;
+    doc.Parse(dumpXML().c_str());
+    XMLNode * devicesNode = doc.FirstChild()
+        ->FirstChildElement("devices");
+
+    XMLNode * diskNode = devicesNode->FirstChildElement("disk");
+
+    for(; diskNode != NULL; diskNode = diskNode->NextSiblingElement("feature")) {
+        string type(diskNode->ToElement()->Attribute("type"));
+        string device(diskNode->ToElement()->Attribute("device"));
+        if (type == "file" && device == "disk") {
+            // read
+        }
+        hddImages.push_back(diskNode->ToElement()->Attribute("name"));
+    }
+
+    return hddImages;
+}
+
 vector<string> VM::getCPUFeatures()
 {
     std::vector<string> cpuFeatures;
