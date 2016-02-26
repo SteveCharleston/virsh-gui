@@ -30,6 +30,8 @@ VirshGui::VirshGui(QWidget *parent) :
     ui->splitter->setStretchFactor(1, 1);
     ui->vmListTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->vmListTable->setHorizontalHeaderLabels(QStringList() << "ID" << "Name" << "Status");
+    ui->startStopButton->setEnabled(false);
+    ui->rebootButton->setEnabled(false);
     populateBookmarkList();
     connect(ui->connectButton, SIGNAL(clicked(bool)), this, SLOT(makeSSHConnection()));
     connect(ui->bookmarList, SIGNAL(currentIndexChanged(int)), this, SLOT(fillLoginForm(int)));
@@ -125,7 +127,11 @@ void VirshGui::toggleVMStatus()
 
 void VirshGui::rebootVM()
 {
-    
+    string vmname = ui->vmnameLabel->text().toStdString();
+    VM vm = vmlist[vmname];
+    if (vm.getStatus() == VMStatus::running) {
+        vm.reboot();
+    }
 }
 
 void VirshGui::refreshVmList()
@@ -196,9 +202,11 @@ void VirshGui::populateVMInfos(string vmname)
 
     if (vmstatus == VMStatus::shutoff) {
         ui->startStopButton->setText("VM starten");
+        ui->startStopButton->setDisabled(false);
         ui->rebootButton->setDisabled(true);
     } else if (vmstatus == VMStatus::running) {
         ui->startStopButton->setText("VM ausschalten");
+        ui->rebootButton->setDisabled(false);
     } else {
         ui->startStopButton->setText("keine Aktion");
         ui->startStopButton->setDisabled(true);

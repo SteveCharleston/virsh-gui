@@ -33,6 +33,7 @@ public:
     string getMemory();
     string dumpXML();
     void start();
+    void reboot();
     void destroy();
     string getUUID();
     string getOSType();

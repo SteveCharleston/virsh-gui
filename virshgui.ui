@@ -424,7 +424,7 @@
            <item>
             <widget class="QPushButton" name="startStopButton">
              <property name="text">
-              <string>Start/Stop</string>
+              <string>VM starten</string>
              </property>
             </widget>
            </item>
