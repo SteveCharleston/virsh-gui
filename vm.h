@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include "libssh/libsshpp.hpp"
+#include "diskimage.h"
 
 using namespace std;
 
@@ -37,7 +38,7 @@ public:
     void destroy();
     string getUUID();
     string getOSType();
-    vector<string> getHDDImages();
+    vector<Diskimage> getHDDImages();
     vector<string> getHVFeatures();
     vector<string> getCPUFeatures();
     string getArch();

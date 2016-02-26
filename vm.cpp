@@ -4,6 +4,7 @@
 #include "tinyxml2/tinyxml2.h"
 #include "vm.h"
 #include "sshcommunication.h"
+#include "diskimage.h"
 
 using namespace std;
 using namespace tinyxml2;
@@ -69,7 +70,7 @@ void VM::start()
 
 void VM::reboot()
 {
-    string cmd = "virsh start " + name;
+    string cmd = "virsh reboot " + name;
     ssh->execCmd(cmd);
 }
 
@@ -139,9 +140,9 @@ vector<string> VM::getBootDevs()
     return boot;
 }
 
-vector<string> VM::getHDDImages()
+vector<Diskimage> VM::getHDDImages()
 {
-    std::vector<string> hddImages;
+    std::vector<Diskimage> diskImages;
 
     tinyxml2::XMLDocument doc;
     doc.Parse(dumpXML().c_str());
@@ -154,12 +155,14 @@ vector<string> VM::getHDDImages()
         string type(diskNode->ToElement()->Attribute("type"));
         string device(diskNode->ToElement()->Attribute("device"));
         if (type == "file" && device == "disk") {
-            // read
+            string sourcefile = diskNode
+                ->FirstChildElement("source")
+                ->Attribute("file");
+            diskImages.push_back(Diskimage(ssh, sourcefile));
         }
-        hddImages.push_back(diskNode->ToElement()->Attribute("name"));
     }
 
-    return hddImages;
+    return diskImages;
 }
 
 vector<string> VM::getCPUFeatures()
