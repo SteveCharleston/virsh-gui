@@ -32,6 +32,8 @@ public:
     VMStatus getStatus();
     string getMemory();
     string dumpXML();
+    void start();
+    void destroy();
     string getUUID();
     string getOSType();
     vector<string> getHDDImages();

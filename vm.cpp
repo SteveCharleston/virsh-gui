@@ -61,6 +61,18 @@ string VM::dumpXML()
     return ssh->execCmd(cmd);
 }
 
+void VM::start()
+{
+    string cmd = "virsh start " + name;
+    ssh->execCmd(cmd);
+}
+
+void VM::destroy()
+{
+    string cmd = "virsh destroy " + name;
+    ssh->execCmd(cmd);
+}
+
 string VM::getID()
 {
     return id;

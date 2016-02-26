@@ -24,6 +24,8 @@ public slots:
     void fillLoginForm(int);
     void vmChosen(int row, int column);
     void refreshVmList();
+    void toggleVMStatus();
+    void rebootVM();
 
 private:
     Ui::VirshGui *ui;
@@ -31,6 +33,7 @@ private:
     map<string, VM> vmlist;
     void populateVMList(map<string, VM>);
     void populateBookmarkList();
+    void populateVMInfos(string vmname);
 };
 
 #endif // VIRSHGUI_H

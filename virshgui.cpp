@@ -35,6 +35,8 @@ VirshGui::VirshGui(QWidget *parent) :
     connect(ui->bookmarList, SIGNAL(currentIndexChanged(int)), this, SLOT(fillLoginForm(int)));
     connect(ui->vmListTable, SIGNAL(cellClicked(int, int)), this, SLOT(vmChosen(int, int)));
     connect(ui->refreshVmList, SIGNAL(clicked()), this, SLOT(refreshVmList()));
+    connect(ui->startStopButton, SIGNAL(clicked(bool)), this, SLOT(toggleVMStatus()));
+    connect(ui->rebootButton, SIGNAL(clicked(bool)), this, SLOT(rebootVM()));
 }
 
 VirshGui::~VirshGui()
@@ -79,6 +81,7 @@ void VirshGui::populateVMList(map<string, VM> vmlist)
         row++;
     }
 }
+
 void VirshGui::populateBookmarkList()
 {
     ifstream bookmarkFile;
@@ -107,12 +110,32 @@ void VirshGui::populateBookmarkList()
     bookmarkFile.close();
 }
 
+void VirshGui::toggleVMStatus()
+{
+    string vmname = ui->vmnameLabel->text().toStdString();
+    VM vm = vmlist[vmname];
+    if (vm.getStatus() == VMStatus::shutoff) {
+        vm.start();
+    } else if (vm.getStatus() == VMStatus::running) {
+        vm.destroy();
+    }
+
+    refreshVmList();
+}
+
+void VirshGui::rebootVM()
+{
+    
+}
+
 void VirshGui::refreshVmList()
 {
     //std::cout << "refreshVmList" << std::endl;
     vmlist = ssh->listVMs();
     populateVMList(vmlist);
-
+    if (! ui->vmnameLabel->text().isEmpty()) {
+        populateVMInfos(ui->vmnameLabel->text().toStdString());
+    }
 }
 
 void VirshGui::fillLoginForm(int hostidx)
@@ -154,14 +177,8 @@ void VirshGui::fillLoginForm(int hostidx)
     bookmarkFile.close();
 }
 
-void VirshGui::vmChosen(int row, int column)
+void VirshGui::populateVMInfos(string vmname)
 {
-    Q_UNUSED(column);
-
-    BasicXMLSyntaxHighlighter *highlighter = new BasicXMLSyntaxHighlighter(ui->xmlDisplay);
-    Q_UNUSED(highlighter);
-
-    string vmname = ui->vmListTable->item(row, 1)->text().toStdString();
     VMStatus vmstatus = vmlist[vmname].getStatus();
     string strstatus = vmlist[vmname].statusToString(vmstatus);
     string memory = vmlist[vmname].getMemory();
@@ -177,6 +194,17 @@ void VirshGui::vmChosen(int row, int column)
     string hvFeatureStr = join(hvFeatures, ", ");
     string cpuFeatureStr = join(cpuFeatures, ", ");
 
+    if (vmstatus == VMStatus::shutoff) {
+        ui->startStopButton->setText("VM starten");
+        ui->rebootButton->setDisabled(true);
+    } else if (vmstatus == VMStatus::running) {
+        ui->startStopButton->setText("VM ausschalten");
+    } else {
+        ui->startStopButton->setText("keine Aktion");
+        ui->startStopButton->setDisabled(true);
+        ui->rebootButton->setDisabled(true);
+    }
+
     ui->xmlDisplay->setText(QString::fromStdString(vmxml));
     ui->vmnameLabel->setText(QString::fromStdString(vmname));
     ui->statusLabel->setText(QString::fromStdString(strstatus));
@@ -189,4 +217,15 @@ void VirshGui::vmChosen(int row, int column)
     ui->hvFeaturesLabel->setWordWrap(true);
     ui->cpuFeaturesLabel->setText(QString::fromStdString(cpuFeatureStr));
     ui->cpuFeaturesLabel->setWordWrap(true);
+}
+
+void VirshGui::vmChosen(int row, int column)
+{
+    Q_UNUSED(column);
+
+    BasicXMLSyntaxHighlighter *highlighter = new BasicXMLSyntaxHighlighter(ui->xmlDisplay);
+    Q_UNUSED(highlighter);
+
+    string vmname = ui->vmListTable->item(row, 1)->text().toStdString();
+    populateVMInfos(vmname);
 }
