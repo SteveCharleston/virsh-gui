@@ -226,6 +226,7 @@ void VirshGui::populateVMInfos(string vmname)
         delete item;
     }
 
+    int snapshotTableCount = 0;
     for (auto hdd : vmlist[vmname].getHDDImages()) {
         int row = 0;
         QGroupBox *hddGroupBox = new QGroupBox(QString::fromStdString(hdd.getPath()));
@@ -233,15 +234,18 @@ void VirshGui::populateVMInfos(string vmname)
 
         QVBoxLayout *hddVBox = new QVBoxLayout;
         QTableWidget *snapshotTable = new QTableWidget(0, 5, this);
+        snapshotTable->setSelectionMode(QAbstractItemView::SingleSelection);
         snapshotTable->setHorizontalHeaderLabels(QStringList() << "ID" << "Tag" << "VM Size" << "Date" << "VM Clock");
         snapshotTable->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);
         snapshotTable->setColumnWidth(0, 45);
         snapshotTable->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
+        connect(snapshotTable, &QTableWidget::cellPressed, [this, snapshotTableCount](){ clearSnapshotSelectionsExcept(snapshotTableCount); });
+        snapshotTableCount++;
 
         for (auto snapshot : hdd.getSnapshots()) {
             snapshotTable->setRowCount(row + 1);
             QTableWidgetItem *id = new QTableWidgetItem(
-                    QString::fromStdString("100" + snapshot.getID()));
+                    QString::fromStdString(snapshot.getID()));
             QTableWidgetItem *tag = new QTableWidgetItem(
                     QString::fromStdString(snapshot.getTag()));
             QTableWidgetItem *size = new QTableWidgetItem(
@@ -265,6 +269,8 @@ void VirshGui::populateVMInfos(string vmname)
     }
 
     QPushButton *applySnapshotButton = new QPushButton("Snapshot Anwenden", this);
+    //connect(applySnapshotButton, SIGNAL(clicked(bool)), this, SLOT(clearSnapshotSelectionsExcept(int)));
+    connect(applySnapshotButton, &QPushButton::clicked, [this](){ clearSnapshotSelectionsExcept(1); });
     ui->snapshotsTabLayout->addWidget(applySnapshotButton);
 
     ui->xmlDisplay->setText(QString::fromStdString(vmxml));
@@ -279,6 +285,20 @@ void VirshGui::populateVMInfos(string vmname)
     ui->hvFeaturesLabel->setWordWrap(true);
     ui->cpuFeaturesLabel->setText(QString::fromStdString(cpuFeatureStr));
     ui->cpuFeaturesLabel->setWordWrap(true);
+}
+
+void VirshGui::clearSnapshotSelectionsExcept(int snapshotTableIndex)
+{
+    std::cout << "index: " << snapshotTableIndex << std::endl;
+    int count = 0;
+    for (auto snapshotTable : ui->snapshotsTab->findChildren<QTableWidget *>()) {
+        if (count == snapshotTableIndex) {
+            count++;
+            continue;
+        }
+        snapshotTable->clearSelection();
+        count++;
+    }
 }
 
 void VirshGui::vmChosen(int row, int column)
