@@ -27,6 +27,7 @@ public slots:
     void toggleVMStatus();
     void rebootVM();
     void clearSnapshotSelectionsExcept(int snapshotTableIndex);
+    void applySnapshot();
 
 private:
     Ui::VirshGui *ui;

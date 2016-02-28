@@ -269,8 +269,8 @@ void VirshGui::populateVMInfos(string vmname)
     }
 
     QPushButton *applySnapshotButton = new QPushButton("Snapshot Anwenden", this);
-    //connect(applySnapshotButton, SIGNAL(clicked(bool)), this, SLOT(clearSnapshotSelectionsExcept(int)));
-    connect(applySnapshotButton, &QPushButton::clicked, [this](){ clearSnapshotSelectionsExcept(1); });
+    connect(applySnapshotButton, SIGNAL(clicked(bool)), this, SLOT(applySnapshot()));
+    //connect(applySnapshotButton, &QPushButton::clicked, [this](){ clearSnapshotSelectionsExcept(1); });
     ui->snapshotsTabLayout->addWidget(applySnapshotButton);
 
     ui->xmlDisplay->setText(QString::fromStdString(vmxml));
@@ -289,7 +289,6 @@ void VirshGui::populateVMInfos(string vmname)
 
 void VirshGui::clearSnapshotSelectionsExcept(int snapshotTableIndex)
 {
-    std::cout << "index: " << snapshotTableIndex << std::endl;
     int count = 0;
     for (auto snapshotTable : ui->snapshotsTab->findChildren<QTableWidget *>()) {
         if (count == snapshotTableIndex) {
@@ -297,6 +296,26 @@ void VirshGui::clearSnapshotSelectionsExcept(int snapshotTableIndex)
             continue;
         }
         snapshotTable->clearSelection();
+        count++;
+    }
+}
+
+void VirshGui::applySnapshot()
+{
+    int count = 0;
+    for (auto hddGroupBox : ui->snapshotsTab->findChildren<QGroupBox *>()) {
+        QTableWidget *snapshotTable = hddGroupBox->findChild<QTableWidget *>();
+        QList<QTableWidgetItem *> items = snapshotTable->selectedItems();
+        //std::cout << items.count() << std::endl;
+        if (items.count() == 1) {
+            cout
+                << "hdd: "
+                << hddGroupBox->title().toStdString()
+                << ", snapshot: "
+                << snapshotTable->item(items.at(0)->row(), 1)->text().toStdString()
+                << endl;
+            break;
+        }
         count++;
     }
 }
