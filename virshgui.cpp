@@ -3,6 +3,10 @@
 #include <fstream>
 #include <sstream>
 #include <iterator>
+#include <QGroupBox>
+#include <QLabel>
+#include <QTableWidget>
+#include <QPushButton>
 #include "virshgui.h"
 #include "ui_virshgui.h"
 #include "sshcommunication.h"
@@ -28,7 +32,10 @@ VirshGui::VirshGui(QWidget *parent) :
     ui->setupUi(this);
     ui->splitter->setStretchFactor(0, 0);
     ui->splitter->setStretchFactor(1, 1);
-    ui->vmListTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    //ui->vmListTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->vmListTable->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);
+    ui->vmListTable->setColumnWidth(0, 45);
+    ui->vmListTable->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
     ui->vmListTable->setHorizontalHeaderLabels(QStringList() << "ID" << "Name" << "Status");
     ui->startStopButton->setEnabled(false);
     ui->rebootButton->setEnabled(false);
@@ -212,6 +219,53 @@ void VirshGui::populateVMInfos(string vmname)
         ui->startStopButton->setDisabled(true);
         ui->rebootButton->setDisabled(true);
     }
+
+    while (ui->snapshotsTabLayout->count() > 0) {
+        QLayoutItem *item = ui->snapshotsTabLayout->takeAt(0);
+        delete item->widget();
+        delete item;
+    }
+
+    for (auto hdd : vmlist[vmname].getHDDImages()) {
+        int row = 0;
+        QGroupBox *hddGroupBox = new QGroupBox(QString::fromStdString(hdd.getPath()));
+        hddGroupBox->setFlat(false);
+
+        QVBoxLayout *hddVBox = new QVBoxLayout;
+        QTableWidget *snapshotTable = new QTableWidget(0, 5, this);
+        snapshotTable->setHorizontalHeaderLabels(QStringList() << "ID" << "Tag" << "VM Size" << "Date" << "VM Clock");
+        snapshotTable->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);
+        snapshotTable->setColumnWidth(0, 45);
+        snapshotTable->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
+
+        for (auto snapshot : hdd.getSnapshots()) {
+            snapshotTable->setRowCount(row + 1);
+            QTableWidgetItem *id = new QTableWidgetItem(
+                    QString::fromStdString("100" + snapshot.getID()));
+            QTableWidgetItem *tag = new QTableWidgetItem(
+                    QString::fromStdString(snapshot.getTag()));
+            QTableWidgetItem *size = new QTableWidgetItem(
+                    QString::fromStdString(snapshot.getSize()));
+            QTableWidgetItem *date = new QTableWidgetItem(
+                    QString::fromStdString(snapshot.getDate()));
+            QTableWidgetItem *clock = new QTableWidgetItem(
+                    QString::fromStdString(snapshot.getClock()));
+
+            snapshotTable->setItem(row, 0, id);
+            snapshotTable->setItem(row, 1, tag);
+            snapshotTable->setItem(row, 2, size);
+            snapshotTable->setItem(row, 3, date);
+            snapshotTable->setItem(row, 4, clock);
+
+            row++;
+        }
+        hddVBox->addWidget(snapshotTable);
+        hddGroupBox->setLayout(hddVBox);
+        ui->snapshotsTabLayout->addWidget(hddGroupBox);
+    }
+
+    QPushButton *applySnapshotButton = new QPushButton("Snapshot Anwenden", this);
+    ui->snapshotsTabLayout->addWidget(applySnapshotButton);
 
     ui->xmlDisplay->setText(QString::fromStdString(vmxml));
     ui->vmnameLabel->setText(QString::fromStdString(vmname));

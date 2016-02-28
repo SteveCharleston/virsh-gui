@@ -1,7 +1,8 @@
 #ifndef DISKIMAGE_H_A1M5ZUBG
 #define DISKIMAGE_H_A1M5ZUBG
 #include <string>
-#include "libssh/libsshpp.hpp"
+#include <vector>
+#include "Snapshot.h"
 
 using namespace std;
 
@@ -11,6 +12,8 @@ class Diskimage
 public:
     Diskimage();
     Diskimage (SSHCommunication *ssh, string path);
+    string getPath();
+    vector<Snapshot> getSnapshots();
 
 private:
     SSHCommunication *ssh;

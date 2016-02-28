@@ -151,13 +151,14 @@ vector<Diskimage> VM::getHDDImages()
 
     XMLNode * diskNode = devicesNode->FirstChildElement("disk");
 
-    for(; diskNode != NULL; diskNode = diskNode->NextSiblingElement("feature")) {
+    for(; diskNode != NULL; diskNode = diskNode->NextSiblingElement("disk")) {
         string type(diskNode->ToElement()->Attribute("type"));
         string device(diskNode->ToElement()->Attribute("device"));
         if (type == "file" && device == "disk") {
             string sourcefile = diskNode
                 ->FirstChildElement("source")
                 ->Attribute("file");
+            std::cout << sourcefile << std::endl;
             diskImages.push_back(Diskimage(ssh, sourcefile));
         }
     }

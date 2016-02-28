@@ -18,7 +18,8 @@ SSHCommunication::SSHCommunication(string user, string password, string host, in
     sshConnection = new ssh::Session();
     sshConnection->setOption(SSH_OPTIONS_HOST, host.c_str());
     sshConnection->setOption(SSH_OPTIONS_USER, user.c_str());
-    sshConnection->setOption(SSH_OPTIONS_LOG_VERBOSITY, SSH_LOG_PROTOCOL);
+    //sshConnection->setOption(SSH_OPTIONS_LOG_VERBOSITY, SSH_LOG_PROTOCOL);
+    sshConnection->setOption(SSH_OPTIONS_LOG_VERBOSITY, SSH_LOG_NOLOG);
     sshConnection->setOption(SSH_OPTIONS_PORT, &port);
 
     sshConnection->connect();
@@ -42,12 +43,9 @@ string SSHCommunication::execCmd(string cmd) {
     //nwritten = chan.write(cmd.c_str(), cmd.length());
     // end test
     chan.requestExec(cmd.c_str());
-
-    qDebug() << "reading in buffer";
     nbytes = chan.read(buffer, sizeof(buffer), 0);
 
     while (nbytes > 0) {
-        qDebug() << buffer;
         string strBuf(buffer, nbytes);
         output.append(strBuf);
         nbytes = chan.read(buffer, sizeof(buffer), 0);

@@ -17,6 +17,7 @@ SOURCES += main.cpp\
         sshcommunication.cpp \
         vm.cpp\
         diskimage.cpp\
+        Snapshot.cpp\
         tinyxml2/tinyxml2.cpp\
         basic-xml-syntax-highlighter/basic-xml-syntax-highlighter/BasicXMLSyntaxHighlighter.cpp
 
@@ -24,6 +25,7 @@ HEADERS  += virshgui.h \
     sshcommunication.h \
     vm.h\
     diskimage.h\
+    Snapshot.h\
     tinyxml2/tinyxml2.h\
     basic-xml-syntax-highlighter/basic-xml-syntax-highlighter/BasicXMLSyntaxHighlighter.h
 

@@ -219,7 +219,7 @@
       </widget>
       <widget class="QTabWidget" name="vmTabs">
        <property name="currentIndex">
-        <number>0</number>
+        <number>1</number>
        </property>
        <widget class="QWidget" name="infos">
         <attribute name="title">
@@ -439,10 +439,11 @@
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="snapshots">
+       <widget class="QWidget" name="snapshotsTab">
         <attribute name="title">
          <string>Snapshots</string>
         </attribute>
+        <layout class="QVBoxLayout" name="snapshotsTabLayout"/>
        </widget>
        <widget class="QWidget" name="xml">
         <attribute name="title">
