@@ -30,6 +30,7 @@ public slots:
     void applySnapshot();
     void createSnapshot(string hddPath, string vmname, string snapshotName);
     void filterVMs(QString filter);
+    void virtViewer();
 
 private:
     Ui::VirshGui *ui;

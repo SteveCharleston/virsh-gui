@@ -55,6 +55,7 @@ VirshGui::VirshGui(QWidget *parent) :
     connect(ui->startStopButton, SIGNAL(clicked(bool)), this, SLOT(toggleVMStatus()));
     connect(ui->rebootButton, SIGNAL(clicked(bool)), this, SLOT(rebootVM()));
     connect(ui->vmFilterEdit, SIGNAL(textChanged(QString)), this, SLOT(filterVMs(QString)));
+    connect(ui->virtViewerButton, SIGNAL(clicked(bool)), this, SLOT(virtViewer()));
 }
 
 VirshGui::~VirshGui()
@@ -137,6 +138,12 @@ void VirshGui::filterVMs(QString filter)
             .contains(filter.toLower());
         ui->vmListTable->setRowHidden(row, !match);
     }
+}
+
+void VirshGui::virtViewer()
+{
+    int ret;
+    ret = system("virt-viewer test");
 }
 
 void VirshGui::toggleVMStatus()

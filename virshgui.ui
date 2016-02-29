@@ -422,6 +422,13 @@
           </layout>
          </item>
          <item>
+          <widget class="QPushButton" name="virtViewerButton">
+           <property name="text">
+            <string>Grafische Anzeige</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <layout class="QHBoxLayout" name="statusControlLayout">
            <item>
             <widget class="QPushButton" name="startStopButton">
