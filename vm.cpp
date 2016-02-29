@@ -265,6 +265,18 @@ string VM::getUUID()
     return uuid;
 }
 
+string VM::getVNCPort()
+{
+    tinyxml2::XMLDocument doc;
+    doc.Parse(dumpXML().c_str());
+    string port = doc.FirstChild()
+        ->FirstChildElement("devices")
+        ->FirstChildElement("graphics")
+        ->Attribute("port");
+
+    return port;
+}
+
 ostream & operator<<(ostream &out, VM &vm)
 {
     string vmstatus;

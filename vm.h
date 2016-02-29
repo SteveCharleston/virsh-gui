@@ -43,6 +43,7 @@ public:
     vector<string> getCPUFeatures();
     string getArch();
     string getCPUCount();
+    string getVNCPort();
     vector<string> getBootDevs();
     static string statusToString(VMStatus status);
     friend ostream & operator<<(ostream &out, VM &vm);

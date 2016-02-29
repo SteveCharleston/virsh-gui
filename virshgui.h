@@ -30,7 +30,7 @@ public slots:
     void applySnapshot();
     void createSnapshot(string hddPath, string vmname, string snapshotName);
     void filterVMs(QString filter);
-    void virtViewer();
+    void vncDisplay();
 
 private:
     Ui::VirshGui *ui;

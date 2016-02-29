@@ -11,6 +11,9 @@
 #include "ui_virshgui.h"
 #include "sshcommunication.h"
 #include "basic-xml-syntax-highlighter/basic-xml-syntax-highlighter/BasicXMLSyntaxHighlighter.h"
+#include "vncclient/vncclientwidgetcls.h"
+#include "vncclient/rfbclientwidgetcls.h"
+#include "vncclient/vncclientwidget2cls.h"
 
 using namespace std;
 
@@ -55,7 +58,7 @@ VirshGui::VirshGui(QWidget *parent) :
     connect(ui->startStopButton, SIGNAL(clicked(bool)), this, SLOT(toggleVMStatus()));
     connect(ui->rebootButton, SIGNAL(clicked(bool)), this, SLOT(rebootVM()));
     connect(ui->vmFilterEdit, SIGNAL(textChanged(QString)), this, SLOT(filterVMs(QString)));
-    connect(ui->virtViewerButton, SIGNAL(clicked(bool)), this, SLOT(virtViewer()));
+    connect(ui->virtViewerButton, SIGNAL(clicked(bool)), this, SLOT(vncDisplay()));
 }
 
 VirshGui::~VirshGui()
@@ -140,10 +143,14 @@ void VirshGui::filterVMs(QString filter)
     }
 }
 
-void VirshGui::virtViewer()
+void VirshGui::vncDisplay()
 {
-    int ret;
-    ret = system("virt-viewer test");
+    string vmname = ui->vmnameLabel->text().toStdString();
+    VM vm = vmlist[vmname];
+    int vncport = stoi(vm.getVNCPort());
+    vncclientwidget2cls *vnc = new vncclientwidget2cls();
+    vnc->connectVNCTCP("localhost", vncport);
+    vnc->showNormal();
 }
 
 void VirshGui::toggleVMStatus()
@@ -238,14 +245,17 @@ void VirshGui::populateVMInfos(string vmname)
         ui->startStopButton->setText("VM starten");
         ui->startStopButton->setEnabled(true);
         ui->rebootButton->setDisabled(true);
+        ui->virtViewerButton->setDisabled(true);
     } else if (vmstatus == VMStatus::running) {
         ui->startStopButton->setText("VM ausschalten");
         ui->startStopButton->setEnabled(true);
         ui->rebootButton->setEnabled(true);
+        ui->virtViewerButton->setEnabled(true);
     } else {
         ui->startStopButton->setText("keine Aktion");
         ui->startStopButton->setDisabled(true);
         ui->rebootButton->setDisabled(true);
+        ui->virtViewerButton->setDisabled(true);
     }
 
     while (ui->snapshotsTabLayout->count() > 0) {

@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -18,6 +18,9 @@ SOURCES += main.cpp\
         vm.cpp\
         diskimage.cpp\
         Snapshot.cpp\
+        vncclient/rfbclientcls.cpp \
+        vncclient/vncclientwidget2cls.cpp \
+        vncclient/rfbclientwidgetcls.cpp \
         tinyxml2/tinyxml2.cpp\
         basic-xml-syntax-highlighter/basic-xml-syntax-highlighter/BasicXMLSyntaxHighlighter.cpp
 
@@ -26,6 +29,9 @@ HEADERS  += virshgui.h \
     vm.h\
     diskimage.h\
     Snapshot.h\
+    vncclient/rfbclientcls.h \
+    vncclient/vncclientwidget2cls.h \
+    vncclient/rfbclientwidgetcls.h \
     tinyxml2/tinyxml2.h\
     basic-xml-syntax-highlighter/basic-xml-syntax-highlighter/BasicXMLSyntaxHighlighter.h
 
