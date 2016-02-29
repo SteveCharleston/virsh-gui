@@ -209,11 +209,12 @@ void VirshGui::populateVMInfos(string vmname)
 
     if (vmstatus == VMStatus::shutoff) {
         ui->startStopButton->setText("VM starten");
-        ui->startStopButton->setDisabled(false);
+        ui->startStopButton->setEnabled(true);
         ui->rebootButton->setDisabled(true);
     } else if (vmstatus == VMStatus::running) {
         ui->startStopButton->setText("VM ausschalten");
-        ui->rebootButton->setDisabled(false);
+        ui->startStopButton->setEnabled(true);
+        ui->rebootButton->setEnabled(true);
     } else {
         ui->startStopButton->setText("keine Aktion");
         ui->startStopButton->setDisabled(true);
@@ -264,6 +265,17 @@ void VirshGui::populateVMInfos(string vmname)
             row++;
         }
         hddVBox->addWidget(snapshotTable);
+
+        QHBoxLayout *addSnapHBox = new QHBoxLayout;
+        QLineEdit *addSnapNameEdit = new QLineEdit;
+        QPushButton *addSnapButton = new QPushButton;
+        addSnapButton->setText("Snapshot erstellen");
+        string hddPath = hdd.getPath();
+        connect(addSnapButton, &QPushButton::clicked, [this, hddPath, vmname, addSnapNameEdit](){ createSnapshot(hddPath, vmname, addSnapNameEdit->text().toStdString()); });
+        addSnapHBox->addWidget(addSnapNameEdit);
+        addSnapHBox->addWidget(addSnapButton);
+
+        hddVBox->addLayout(addSnapHBox);
         hddGroupBox->setLayout(hddVBox);
         ui->snapshotsTabLayout->addWidget(hddGroupBox);
     }
@@ -308,16 +320,32 @@ void VirshGui::applySnapshot()
         QList<QTableWidgetItem *> items = snapshotTable->selectedItems();
         //std::cout << items.count() << std::endl;
         if (items.count() == 1) {
-            cout
-                << "hdd: "
-                << hddGroupBox->title().toStdString()
-                << ", snapshot: "
-                << snapshotTable->item(items.at(0)->row(), 1)->text().toStdString()
-                << endl;
+            //cout
+            //    << "hdd: "
+            //    << hddGroupBox->title().toStdString()
+            //    << ", snapshot: "
+            //    << snapshotTable->item(items.at(0)->row(), 1)->text().toStdString()
+            //    << endl;
+            string snapshotID = snapshotTable->item(items.at(0)->row(), 0)->text().toStdString();
+            string hddPath = hddGroupBox->title().toStdString();
+            string cmd = "qemu-img snapshot -a '" + snapshotID + "' '" + hddPath + "'";
+            ssh->execCmd(cmd);
             break;
         }
         count++;
     }
+}
+
+void VirshGui::createSnapshot(string hddPath, string vmname, string snapshotName)
+{
+    if (snapshotName.empty()) {
+        return;
+    }
+    cout << "hddpath: " << hddPath << ", snapshotname: " << snapshotName << endl;
+    string cmd = "qemu-img snapshot -c '" + snapshotName + "' '" + hddPath + "'";
+    std::cout << cmd << std::endl;
+    ssh->execCmd(cmd);
+    populateVMInfos(vmname);
 }
 
 void VirshGui::vmChosen(int row, int column)

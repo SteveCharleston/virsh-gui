@@ -28,6 +28,7 @@ public slots:
     void rebootVM();
     void clearSnapshotSelectionsExcept(int snapshotTableIndex);
     void applySnapshot();
+    void createSnapshot(string hddPath, string vmname, string snapshotName);
 
 private:
     Ui::VirshGui *ui;

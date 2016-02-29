@@ -53,7 +53,7 @@ vector<Snapshot> Diskimage::getSnapshots()
         string clock = regex_matches[5];
 
         Snapshot snapshot(id, tag, size, date, clock);
-        std::cout << snapshot << std::endl;
+        //std::cout << snapshot << std::endl;
         snapshotsVector.push_back(snapshot);
     }
 

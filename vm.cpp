@@ -158,7 +158,7 @@ vector<Diskimage> VM::getHDDImages()
             string sourcefile = diskNode
                 ->FirstChildElement("source")
                 ->Attribute("file");
-            std::cout << sourcefile << std::endl;
+            //std::cout << sourcefile << std::endl;
             diskImages.push_back(Diskimage(ssh, sourcefile));
         }
     }
