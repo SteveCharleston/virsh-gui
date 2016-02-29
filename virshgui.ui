@@ -159,11 +159,6 @@
        <layout class="QVBoxLayout" name="vertivalTable">
         <item>
          <widget class="QTableWidget" name="vmListTable">
-          <property name="font">
-           <font>
-            <pointsize>8</pointsize>
-           </font>
-          </property>
           <property name="editTriggers">
            <set>QAbstractItemView::NoEditTriggers</set>
           </property>
@@ -174,7 +169,7 @@
            <bool>true</bool>
           </property>
           <property name="alternatingRowColors">
-           <bool>false</bool>
+           <bool>true</bool>
           </property>
           <property name="showGrid">
            <bool>false</bool>

@@ -37,10 +37,11 @@ VirshGui::VirshGui(QWidget *parent) :
     ui->splitter->setStretchFactor(0, 0);
     ui->splitter->setStretchFactor(1, 1);
     //ui->vmListTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    ui->vmListTable->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);
-    ui->vmListTable->setColumnWidth(0, 45);
+    ui->vmListTable->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
     ui->vmListTable->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
+    ui->vmListTable->horizontalHeader()->setSectionResizeMode(2, QHeaderView::ResizeToContents);
     ui->vmListTable->setHorizontalHeaderLabels(QStringList() << "ID" << "Name" << "Status");
+    ui->vmListTable->verticalHeader()->hide();
     ui->startStopButton->setEnabled(false);
     ui->rebootButton->setEnabled(false);
     populateBookmarkList();
@@ -241,9 +242,16 @@ void VirshGui::populateVMInfos(string vmname)
         QTableWidget *snapshotTable = new QTableWidget(0, 5, this);
         snapshotTable->setSelectionMode(QAbstractItemView::SingleSelection);
         snapshotTable->setHorizontalHeaderLabels(QStringList() << "ID" << "Tag" << "VM Size" << "Date" << "VM Clock");
-        snapshotTable->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);
-        snapshotTable->setColumnWidth(0, 45);
+        snapshotTable->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
+        //snapshotTable->setColumnWidth(0, 45);
         snapshotTable->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
+        snapshotTable->horizontalHeader()->setSectionResizeMode(2, QHeaderView::ResizeToContents);
+        snapshotTable->horizontalHeader()->setSectionResizeMode(3, QHeaderView::ResizeToContents);
+        snapshotTable->horizontalHeader()->setSectionResizeMode(4, QHeaderView::ResizeToContents);
+        snapshotTable->verticalHeader()->hide();
+        snapshotTable->setAlternatingRowColors(true);
+        //snapshotTable->setSortingEnabled(true);
+        snapshotTable->setEditTriggers(QTableWidget::NoEditTriggers);
         connect(snapshotTable, &QTableWidget::cellPressed, [this, snapshotTableCount](){ clearSnapshotSelectionsExcept(snapshotTableCount); });
         snapshotTableCount++;
 

@@ -41,7 +41,7 @@ string VM::statusToString(VMStatus status)
         vmstatus = "paused";
     } else if (status == VMStatus::shutdown) {
         vmstatus = "shutdown";
-    } else if (status ==VMStatus::shutoff) {
+    } else if (status == VMStatus::shutoff) {
         vmstatus = "shut off";
     } else if (status == VMStatus::crashed) {
         vmstatus = "crashed";
