@@ -16,6 +16,10 @@ using namespace std;
 
 string join(vector<string> list, const char* delim)
 {
+    if (list.empty()) {
+        return "-";
+    }
+
     stringstream liststream;
     copy(list.begin(), list.end(),
             ostream_iterator<string>(liststream, delim));

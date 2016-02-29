@@ -176,14 +176,14 @@ vector<string> VM::getCPUFeatures()
         ->FirstChildElement("cpu");
 
     if (! cpuNode) {
-        std::vector<string> v;
-        v.push_back("-");
-        return v;
+        return cpuFeatures; // no features so empty list
     }
+
     XMLNode * cpuFeatureNode = cpuNode->FirstChildElement("feature");
 
-    for(; cpuFeatureNode != NULL; cpuFeatureNode = cpuFeatureNode->NextSiblingElement("feature")) {
+    while (cpuFeatureNode) {
         cpuFeatures.push_back(cpuFeatureNode->ToElement()->Attribute("name"));
+        cpuFeatureNode = cpuFeatureNode->NextSiblingElement("feature");
     }
 
     return cpuFeatures;
