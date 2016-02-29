@@ -204,6 +204,13 @@
          </widget>
         </item>
         <item>
+         <widget class="QLineEdit" name="vmFilterEdit">
+          <property name="placeholderText">
+           <string>Filter</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QPushButton" name="refreshVmList">
           <property name="text">
            <string>Refresh</string>

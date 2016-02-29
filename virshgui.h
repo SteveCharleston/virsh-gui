@@ -29,6 +29,7 @@ public slots:
     void clearSnapshotSelectionsExcept(int snapshotTableIndex);
     void applySnapshot();
     void createSnapshot(string hddPath, string vmname, string snapshotName);
+    void filterVMs(QString filter);
 
 private:
     Ui::VirshGui *ui;

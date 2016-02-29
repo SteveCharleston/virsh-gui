@@ -36,6 +36,7 @@ VirshGui::VirshGui(QWidget *parent) :
     ui->setupUi(this);
     ui->splitter->setStretchFactor(0, 0);
     ui->splitter->setStretchFactor(1, 1);
+
     //ui->vmListTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->vmListTable->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
     ui->vmListTable->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
@@ -44,13 +45,16 @@ VirshGui::VirshGui(QWidget *parent) :
     ui->vmListTable->verticalHeader()->hide();
     ui->startStopButton->setEnabled(false);
     ui->rebootButton->setEnabled(false);
+
     populateBookmarkList();
+
     connect(ui->connectButton, SIGNAL(clicked(bool)), this, SLOT(makeSSHConnection()));
     connect(ui->bookmarList, SIGNAL(currentIndexChanged(int)), this, SLOT(fillLoginForm(int)));
     connect(ui->vmListTable, SIGNAL(cellClicked(int, int)), this, SLOT(vmChosen(int, int)));
     connect(ui->refreshVmList, SIGNAL(clicked()), this, SLOT(refreshVmList()));
     connect(ui->startStopButton, SIGNAL(clicked(bool)), this, SLOT(toggleVMStatus()));
     connect(ui->rebootButton, SIGNAL(clicked(bool)), this, SLOT(rebootVM()));
+    connect(ui->vmFilterEdit, SIGNAL(textChanged(QString)), this, SLOT(filterVMs(QString)));
 }
 
 VirshGui::~VirshGui()
@@ -122,6 +126,17 @@ void VirshGui::populateBookmarkList()
     }
 
     bookmarkFile.close();
+}
+
+void VirshGui::filterVMs(QString filter)
+{
+    for (int row = 0; row < ui->vmListTable->rowCount(); ++row) {
+        QTableWidgetItem *vmnameItem = ui->vmListTable->item(row, 1);
+        bool match = vmnameItem->text()
+            .toLower()
+            .contains(filter.toLower());
+        ui->vmListTable->setRowHidden(row, !match);
+    }
 }
 
 void VirshGui::toggleVMStatus()
