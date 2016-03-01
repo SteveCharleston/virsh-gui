@@ -77,6 +77,7 @@ void VirshGui::makeSSHConnection()
     string host = ui->hostEdit->text().toStdString();
     int port = ui->portEdit->text().toInt();
     ssh = new SSHCommunication(user, password, host, port);
+    ui->refreshVmList->setEnabled(true);
 
     vmlist = ssh->listVMs();
     populateVMList(vmlist);
