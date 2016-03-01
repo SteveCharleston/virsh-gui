@@ -34,6 +34,7 @@ public:
     string getMemory();
     string dumpXML();
     void start();
+    void shutdown();
     void reboot();
     void destroy();
     string getUUID();

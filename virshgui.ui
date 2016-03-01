@@ -438,6 +438,13 @@
             </widget>
            </item>
            <item>
+            <widget class="QPushButton" name="shutdownButton">
+             <property name="text">
+              <string>VM Herunterfahren</string>
+             </property>
+            </widget>
+           </item>
+           <item>
             <widget class="QPushButton" name="rebootButton">
              <property name="text">
               <string>Reboot</string>

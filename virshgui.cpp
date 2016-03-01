@@ -47,6 +47,7 @@ VirshGui::VirshGui(QWidget *parent) :
     ui->vmListTable->setHorizontalHeaderLabels(QStringList() << "ID" << "Name" << "Status");
     ui->vmListTable->verticalHeader()->hide();
     ui->startStopButton->setEnabled(false);
+    ui->shutdownButton->setEnabled(false);
     ui->rebootButton->setEnabled(false);
     ui->virtViewerButton->setEnabled(false);
 
@@ -57,6 +58,7 @@ VirshGui::VirshGui(QWidget *parent) :
     connect(ui->vmListTable, SIGNAL(cellClicked(int, int)), this, SLOT(vmChosen(int, int)));
     connect(ui->refreshVmList, SIGNAL(clicked()), this, SLOT(refreshVmList()));
     connect(ui->startStopButton, SIGNAL(clicked(bool)), this, SLOT(toggleVMStatus()));
+    connect(ui->shutdownButton, SIGNAL(clicked(bool)), this, SLOT(shutdownVM()));
     connect(ui->rebootButton, SIGNAL(clicked(bool)), this, SLOT(rebootVM()));
     connect(ui->vmFilterEdit, SIGNAL(textChanged(QString)), this, SLOT(filterVMs(QString)));
     connect(ui->virtViewerButton, SIGNAL(clicked(bool)), this, SLOT(vncDisplay()));
@@ -167,6 +169,14 @@ void VirshGui::toggleVMStatus()
     refreshVmList();
 }
 
+void VirshGui::shutdownVM()
+{
+    string vmname = ui->vmnameLabel->text().toStdString();
+    VM vm = vmlist[vmname];
+    if (vm.getStatus() == VMStatus::running) {
+        vm.shutdown();
+    }
+}
 void VirshGui::rebootVM()
 {
     string vmname = ui->vmnameLabel->text().toStdString();
@@ -246,16 +256,19 @@ void VirshGui::populateVMInfos(string vmname)
     if (vmstatus == VMStatus::shutoff) {
         ui->startStopButton->setText("VM starten");
         ui->startStopButton->setEnabled(true);
+        ui->shutdownButton->setDisabled(true);
         ui->rebootButton->setDisabled(true);
         ui->virtViewerButton->setDisabled(true);
     } else if (vmstatus == VMStatus::running) {
         ui->startStopButton->setText("VM ausschalten");
         ui->startStopButton->setEnabled(true);
+        ui->shutdownButton->setEnabled(true);
         ui->rebootButton->setEnabled(true);
         ui->virtViewerButton->setEnabled(true);
     } else {
         ui->startStopButton->setText("keine Aktion");
         ui->startStopButton->setDisabled(true);
+        ui->shutdownButton->setDisabled(true);
         ui->rebootButton->setDisabled(true);
         ui->virtViewerButton->setDisabled(true);
     }

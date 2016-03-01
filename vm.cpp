@@ -74,6 +74,11 @@ void VM::reboot()
     ssh->execCmd(cmd);
 }
 
+void VM::shutdown()
+{
+    string cmd = "virsh shutdown " + name;
+    ssh->execCmd(cmd);
+}
 void VM::destroy()
 {
     string cmd = "virsh destroy " + name;

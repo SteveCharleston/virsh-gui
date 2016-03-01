@@ -25,6 +25,7 @@ public slots:
     void vmChosen(int row, int column);
     void refreshVmList();
     void toggleVMStatus();
+    void shutdownVM();
     void rebootVM();
     void clearSnapshotSelectionsExcept(int snapshotTableIndex);
     void applySnapshot();
