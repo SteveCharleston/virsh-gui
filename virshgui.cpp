@@ -48,6 +48,7 @@ VirshGui::VirshGui(QWidget *parent) :
     ui->vmListTable->verticalHeader()->hide();
     ui->startStopButton->setEnabled(false);
     ui->rebootButton->setEnabled(false);
+    ui->virtViewerButton->setEnabled(false);
 
     populateBookmarkList();
 
@@ -180,6 +181,7 @@ void VirshGui::refreshVmList()
     //std::cout << "refreshVmList" << std::endl;
     vmlist = ssh->listVMs();
     populateVMList(vmlist);
+    filterVMs(ui->vmFilterEdit->text());
     if (! ui->vmnameLabel->text().isEmpty()) {
         populateVMInfos(ui->vmnameLabel->text().toStdString());
     }
