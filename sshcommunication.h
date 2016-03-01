@@ -12,6 +12,9 @@ class SSHCommunication
 public:
     SSHCommunication(string user, string password, string host, int port);
     string execCmd(string cmd);
+    int getLastExitCode();
+    string getLastStdout();
+    string getLastStderr();
     map<string, VM> listVMs();
     //string dumpXML(string vmname);
 private:
@@ -20,6 +23,9 @@ private:
     string password;
     string host;
     int port;
+    int lastExitCode;
+    string lastStdout;
+    string lastStderr;
 };
 
 #endif // SSHCOMMUNICATION_H

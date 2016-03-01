@@ -62,6 +62,7 @@ VirshGui::VirshGui(QWidget *parent) :
     connect(ui->rebootButton, SIGNAL(clicked(bool)), this, SLOT(rebootVM()));
     connect(ui->vmFilterEdit, SIGNAL(textChanged(QString)), this, SLOT(filterVMs(QString)));
     connect(ui->virtViewerButton, SIGNAL(clicked(bool)), this, SLOT(vncDisplay()));
+    connect(ui->testButton, SIGNAL(clicked(bool)), this, SLOT(testButton()));
 }
 
 VirshGui::~VirshGui()
@@ -195,6 +196,8 @@ void VirshGui::refreshVmList()
     if (! ui->vmnameLabel->text().isEmpty()) {
         populateVMInfos(ui->vmnameLabel->text().toStdString());
     }
+
+    ui->statusBar->showMessage("VM Liste aktualisiert", 2000);
 }
 
 void VirshGui::fillLoginForm(int hostidx)
@@ -329,7 +332,9 @@ void VirshGui::populateVMInfos(string vmname)
         QLineEdit *addSnapNameEdit = new QLineEdit;
         QPushButton *addSnapButton = new QPushButton;
         addSnapButton->setText("Snapshot erstellen");
+        addSnapButton->setEnabled(false);
         string hddPath = hdd.getPath();
+        connect(addSnapNameEdit, &QLineEdit::textChanged, [this, addSnapButton, addSnapNameEdit](){ toggleAddSnapshotButton(addSnapButton, addSnapNameEdit); });
         connect(addSnapButton, &QPushButton::clicked, [this, hddPath, vmname, addSnapNameEdit](){ createSnapshot(hddPath, vmname, addSnapNameEdit->text().toStdString()); });
         addSnapHBox->addWidget(addSnapNameEdit);
         addSnapHBox->addWidget(addSnapButton);
@@ -388,7 +393,14 @@ void VirshGui::applySnapshot()
             string snapshotID = snapshotTable->item(items.at(0)->row(), 0)->text().toStdString();
             string hddPath = hddGroupBox->title().toStdString();
             string cmd = "qemu-img snapshot -a '" + snapshotID + "' '" + hddPath + "'";
-            ssh->execCmd(cmd);
+            string execOut = ssh->execCmd(cmd);
+            if (ssh->getLastExitCode() == 0) {
+                ui->statusBar->showMessage("Snapshot erfolgreich angewandt", 5000);
+            } else {
+                ui->statusBar->showMessage(
+                        QString::fromStdString("Fehler: " + execOut),
+                        5000);
+            }
             break;
         }
         count++;
@@ -398,12 +410,18 @@ void VirshGui::applySnapshot()
 void VirshGui::createSnapshot(string hddPath, string vmname, string snapshotName)
 {
     if (snapshotName.empty()) {
+        ui->statusBar->showMessage("Bitte Snapshotnamen angeben", 5000);
         return;
     }
-    cout << "hddpath: " << hddPath << ", snapshotname: " << snapshotName << endl;
     string cmd = "qemu-img snapshot -c '" + snapshotName + "' '" + hddPath + "'";
-    std::cout << cmd << std::endl;
-    ssh->execCmd(cmd);
+    string execOut = ssh->execCmd(cmd);
+    if (ssh->getLastExitCode() == 0) {
+        ui->statusBar->showMessage("Snapshot Erstellt", 5000);
+    } else {
+        ui->statusBar->showMessage(
+                        QString::fromStdString("Fehler: " + execOut),
+                        5000);
+    }
     populateVMInfos(vmname);
 }
 
@@ -416,4 +434,19 @@ void VirshGui::vmChosen(int row, int column)
 
     string vmname = ui->vmListTable->item(row, 1)->text().toStdString();
     populateVMInfos(vmname);
+}
+
+void VirshGui::toggleAddSnapshotButton(QPushButton *addSnapButton, QLineEdit *addSnapNameEdit)
+{
+    if (addSnapNameEdit->text().isEmpty()) {
+        addSnapButton->setEnabled(false);
+    } else {
+        addSnapButton->setEnabled(true);
+    }
+}
+
+void VirshGui::testButton()
+{
+    std::cout << ssh->execCmd("/home/steven/test.sh") << std::endl;
+    std::cout << ssh->getLastExitCode() << std::endl;
 }

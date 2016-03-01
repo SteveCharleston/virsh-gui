@@ -31,6 +31,8 @@ string SSHCommunication::execCmd(string cmd) {
     int nbytes;
     char buffer[256];
     string output;
+    lastStdout = "";
+    lastStderr = "";
 
     cmd.insert(0, "LANG=C ");
 
@@ -44,17 +46,41 @@ string SSHCommunication::execCmd(string cmd) {
     // end test
     chan.requestExec(cmd.c_str());
     nbytes = chan.read(buffer, sizeof(buffer), 0);
-
     while (nbytes > 0) {
         string strBuf(buffer, nbytes);
         output.append(strBuf);
+        lastStdout.append(strBuf);
         nbytes = chan.read(buffer, sizeof(buffer), 0);
     }
+
+    nbytes = chan.read(buffer, sizeof(buffer), 1);
+    while (nbytes > 0) {
+        string strBuf(buffer, nbytes);
+        output.append(strBuf);
+        nbytes = chan.read(buffer, sizeof(buffer), 1);
+    }
+
+    lastExitCode = chan.getExitStatus();
 
     chan.sendEof();
     chan.close();
 
     return output;
+}
+
+string SSHCommunication::getLastStdout()
+{
+    return lastStdout;
+}
+
+string SSHCommunication::getLastStderr()
+{
+    return lastStderr;
+}
+
+int SSHCommunication::getLastExitCode()
+{
+    return lastExitCode;
 }
 
 map<string, VM> SSHCommunication::listVMs() {

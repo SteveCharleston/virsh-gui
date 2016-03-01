@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include <map>
+#include <QPushButton>
+#include <QLineEdit>
 #include "sshcommunication.h"
 
 using namespace std;
@@ -32,6 +34,8 @@ public slots:
     void createSnapshot(string hddPath, string vmname, string snapshotName);
     void filterVMs(QString filter);
     void vncDisplay();
+    void testButton();
+    void toggleAddSnapshotButton(QPushButton *addSnapButton, QLineEdit *addSnapNameEdit);
 
 private:
     Ui::VirshGui *ui;
