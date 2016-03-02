@@ -133,6 +133,11 @@ map<string, VM> SSHCommunication::listVMs() {
     return vmlist;
 }
 
+string SSHCommunication::getHost()
+{
+    return host;
+}
+
 //string SSHCommunication::dumpXML(string vmname)
 //{
 //    string cmd = "virsh dumpxml " + vmname;

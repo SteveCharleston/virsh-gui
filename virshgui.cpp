@@ -154,7 +154,7 @@ void VirshGui::vncDisplay()
     VM vm = vmlist[vmname];
     int vncport = stoi(vm.getVNCPort());
     vncclientwidget2cls *vnc = new vncclientwidget2cls();
-    vnc->connectVNCTCP("localhost", vncport);
+    vnc->connectVNCTCP(QString::fromStdString(ssh->getHost()), vncport);
     vnc->showNormal();
 }
 
