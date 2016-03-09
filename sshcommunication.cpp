@@ -3,7 +3,11 @@
 #include <string>
 #include <sstream>
 #include <QtDebug>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <libssh/sftp.h>
 #include "sshcommunication.h"
+#include "libsshpp.hpp"
 #include "vm.h"
 
 using namespace std;
@@ -34,7 +38,7 @@ string SSHCommunication::execCmd(string cmd) {
     lastStdout = "";
     lastStderr = "";
 
-    cmd.insert(0, "LANG=C ");
+    cmd.insert(0, "LANG='C' ");
 
     ssh::Channel chan(*sshConnection);
     chan.openSession();
@@ -66,6 +70,14 @@ string SSHCommunication::execCmd(string cmd) {
     chan.close();
 
     return output;
+}
+
+void SSHCommunication::writeFile(string filename, string content)
+{
+    int access_type = O_WRONLY | O_CREAT | O_TRUNC;
+    Q_UNUSED(access_type);
+    Q_UNUSED(filename);
+    Q_UNUSED(content);
 }
 
 string SSHCommunication::getLastStdout()

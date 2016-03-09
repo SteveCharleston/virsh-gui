@@ -62,6 +62,19 @@ string VM::dumpXML()
     return ssh->execCmd(cmd);
 }
 
+void VM::changeXML(string newXML)
+{
+    string filename = "/tmp/xml" + name + generateRandomString(6);
+
+    string cmd = "cat << editXMLOutPutString > " + filename + "\n"
+        + newXML
+        + "\neditXMLOutPutString";
+    ssh->execCmd(cmd);
+
+    cmd = "EDITOR='cat " + filename + " > ' virsh edit " + name;
+    ssh->execCmd(cmd);
+}
+
 void VM::start()
 {
     string cmd = "virsh start " + name;
@@ -305,6 +318,21 @@ ostream & operator<<(ostream &out, VM &vm)
         vmstatus = "unknown";
     }
     out << vm.id << vm.name << vmstatus;
+
+    return out;
+}
+
+string VM::generateRandomString(int length)
+{
+    static const char alphanum[] =
+        "0123456789"
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        "abcdefghijklmnopqrstuvwxyz";
+    string out;
+
+    for (int i = 0; i < length; ++i) {
+        out += alphanum[rand() % (sizeof(alphanum) - 1)];
+    }
 
     return out;
 }

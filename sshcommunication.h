@@ -12,6 +12,7 @@ class SSHCommunication
 public:
     SSHCommunication(string user, string password, string host, int port);
     string execCmd(string cmd);
+    void writeFile(string filename, string content);
     string getHost();
     int getLastExitCode();
     string getLastStdout();

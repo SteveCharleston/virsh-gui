@@ -36,6 +36,7 @@ public slots:
     void vncDisplay();
     void testButton();
     void toggleAddSnapshotButton(QPushButton *addSnapButton, QLineEdit *addSnapNameEdit);
+    void savexml();
 
 private:
     Ui::VirshGui *ui;

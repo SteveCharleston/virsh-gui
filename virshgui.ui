@@ -224,7 +224,7 @@
       </widget>
       <widget class="QTabWidget" name="vmTabs">
        <property name="currentIndex">
-        <number>0</number>
+        <number>2</number>
        </property>
        <widget class="QWidget" name="infos">
         <attribute name="title">
@@ -454,13 +454,6 @@
              </property>
             </widget>
            </item>
-           <item>
-            <widget class="QPushButton" name="testButton">
-             <property name="text">
-              <string>Test</string>
-             </property>
-            </widget>
-           </item>
           </layout>
          </item>
         </layout>
@@ -477,7 +470,14 @@
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <item>
-          <widget class="QTextBrowser" name="xmlDisplay"/>
+          <widget class="QTextEdit" name="xmlDisplay"/>
+         </item>
+         <item>
+          <widget class="QPushButton" name="saveXMLButton">
+           <property name="text">
+            <string>Speichern</string>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>

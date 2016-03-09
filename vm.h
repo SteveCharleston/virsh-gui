@@ -33,6 +33,7 @@ public:
     VMStatus getStatus();
     string getMemory();
     string dumpXML();
+    void changeXML(string newXML);
     void start();
     void shutdown();
     void reboot();
@@ -54,5 +55,7 @@ private:
     string id;
     string name;
     VMStatus status;
+
+    string generateRandomString(int length);
 };
 #endif /* ifndef VM_H */

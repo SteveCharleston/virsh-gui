@@ -3,6 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include <iterator>
+#include <algorithm>
 #include <QGroupBox>
 #include <QLabel>
 #include <QTableWidget>
@@ -32,6 +33,19 @@ string join(vector<string> list, const char* delim)
     return joinstr;
 }
 
+/*
+string replace(string s, char from, char to)
+{
+    for (string::iterator it = s.begin(); it != s.end(); ++it) {
+        if (*it == from) {
+            *it = to;
+        }
+    }
+
+    return s;
+}
+*/
+
 VirshGui::VirshGui(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::VirshGui)
@@ -51,6 +65,8 @@ VirshGui::VirshGui(QWidget *parent) :
     ui->rebootButton->setEnabled(false);
     ui->virtViewerButton->setEnabled(false);
 
+    ui->xmlDisplay->createStandardContextMenu();
+
     populateBookmarkList();
 
     connect(ui->connectButton, SIGNAL(clicked(bool)), this, SLOT(makeSSHConnection()));
@@ -62,7 +78,8 @@ VirshGui::VirshGui(QWidget *parent) :
     connect(ui->rebootButton, SIGNAL(clicked(bool)), this, SLOT(rebootVM()));
     connect(ui->vmFilterEdit, SIGNAL(textChanged(QString)), this, SLOT(filterVMs(QString)));
     connect(ui->virtViewerButton, SIGNAL(clicked(bool)), this, SLOT(vncDisplay()));
-    connect(ui->testButton, SIGNAL(clicked(bool)), this, SLOT(testButton()));
+    connect(ui->saveXMLButton, SIGNAL(clicked(bool)), this, SLOT(savexml()));
+    //connect(ui->testButton, SIGNAL(clicked(bool)), this, SLOT(testButton()));
 }
 
 VirshGui::~VirshGui()
@@ -198,7 +215,7 @@ void VirshGui::refreshVmList()
         populateVMInfos(ui->vmnameLabel->text().toStdString());
     }
 
-    ui->statusBar->showMessage("VM Liste aktualisiert", 2000);
+    //ui->statusBar->showMessage("VM Liste aktualisiert", 2000);
 }
 
 void VirshGui::fillLoginForm(int hostidx)
@@ -443,6 +460,21 @@ void VirshGui::toggleAddSnapshotButton(QPushButton *addSnapButton, QLineEdit *ad
         addSnapButton->setEnabled(false);
     } else {
         addSnapButton->setEnabled(true);
+    }
+}
+
+void VirshGui::savexml()
+{
+    string vmname = ui->vmnameLabel->text().toStdString();
+    VM vm = vmlist[vmname];
+    vm.changeXML(ui->xmlDisplay->toPlainText().toStdString());
+
+    string out = ssh->getLastStdout();
+    std::cout << out.find("(null)") << std::endl;
+    if (out.find("(null)")) {
+        ui->statusBar->showMessage("Error couldn't save or wrong XML", 5000);
+    } else {
+        ui->statusBar->showMessage(QString::fromStdString(out), 5000);
     }
 }
 
