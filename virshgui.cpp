@@ -470,11 +470,13 @@ void VirshGui::savexml()
     vm.changeXML(ui->xmlDisplay->toPlainText().toStdString());
 
     string out = ssh->getLastStdout();
+
+    std::cout << out << std::endl;
     std::cout << out.find("(null)") << std::endl;
-    if (out.find("(null)")) {
-        ui->statusBar->showMessage("Error couldn't save or wrong XML", 5000);
-    } else {
+    if (out.find("(null)") == string::npos) {
         ui->statusBar->showMessage(QString::fromStdString(out), 5000);
+    } else {
+        ui->statusBar->showMessage("Error couldn't save or wrong XML", 5000);
     }
 }
 
