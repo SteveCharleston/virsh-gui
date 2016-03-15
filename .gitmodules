@@ -4,3 +4,6 @@
 [submodule "basic-xml-syntax-highlighter"]
 	path = basic-xml-syntax-highlighter
 	url = https://github.com/d1vanov/basic-xml-syntax-highlighter.git
+[submodule "FakeVim"]
+	path = FakeVim
+	url = https://github.com/SteveCharleston/FakeVim.git
