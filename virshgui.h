@@ -42,6 +42,7 @@ private:
     Ui::VirshGui *ui;
     SSHCommunication *ssh;
     map<string, VM> vmlist;
+    void handleDisconnect();
     void populateVMList(map<string, VM>);
     void populateBookmarkList();
     void populateVMInfos(string vmname);

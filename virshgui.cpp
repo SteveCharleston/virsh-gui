@@ -96,8 +96,13 @@ void VirshGui::makeSSHConnection()
     ssh = new SSHCommunication(user, password, host, port);
     ui->refreshVmList->setEnabled(true);
 
-    vmlist = ssh->listVMs();
-    populateVMList(vmlist);
+    try {
+        vmlist = ssh->listVMs();
+        populateVMList(vmlist);
+    } catch (ssh::SshException e) {
+        handleDisconnect();
+    }
+
 }
 
 void VirshGui::populateVMList(map<string, VM> vmlist)
@@ -169,7 +174,14 @@ void VirshGui::vncDisplay()
 {
     string vmname = ui->vmnameLabel->text().toStdString();
     VM vm = vmlist[vmname];
-    int vncport = stoi(vm.getVNCPort());
+
+    int vncport = 0;
+    try {
+        vncport = stoi(vm.getVNCPort());
+    } catch (ssh::SshException e) {
+        handleDisconnect();
+    }
+
     vncclientwidget2cls *vnc = new vncclientwidget2cls();
     vnc->connectVNCTCP(QString::fromStdString(ssh->getHost()), vncport);
     vnc->showNormal();
@@ -179,10 +191,14 @@ void VirshGui::toggleVMStatus()
 {
     string vmname = ui->vmnameLabel->text().toStdString();
     VM vm = vmlist[vmname];
-    if (vm.getStatus() == VMStatus::shutoff) {
-        vm.start();
-    } else if (vm.getStatus() == VMStatus::running) {
-        vm.destroy();
+    try {
+        if (vm.getStatus() == VMStatus::shutoff) {
+            vm.start();
+        } else if (vm.getStatus() == VMStatus::running) {
+            vm.destroy();
+        }
+    } catch (ssh::SshException e) {
+        handleDisconnect();
     }
 
     refreshVmList();
@@ -193,7 +209,11 @@ void VirshGui::shutdownVM()
     string vmname = ui->vmnameLabel->text().toStdString();
     VM vm = vmlist[vmname];
     if (vm.getStatus() == VMStatus::running) {
-        vm.shutdown();
+        try {
+            vm.shutdown();
+        } catch (ssh::SshException e) {
+            handleDisconnect();
+        }
     }
 }
 void VirshGui::rebootVM()
@@ -201,18 +221,31 @@ void VirshGui::rebootVM()
     string vmname = ui->vmnameLabel->text().toStdString();
     VM vm = vmlist[vmname];
     if (vm.getStatus() == VMStatus::running) {
-        vm.reboot();
+        try {
+            vm.reboot();
+        } catch (ssh::SshException e) {
+            handleDisconnect();
+        }
     }
 }
 
 void VirshGui::refreshVmList()
 {
     //std::cout << "refreshVmList" << std::endl;
-    vmlist = ssh->listVMs();
+    try {
+        vmlist = ssh->listVMs();
+    } catch (ssh::SshException e) {
+        handleDisconnect();
+    }
+
     populateVMList(vmlist);
     filterVMs(ui->vmFilterEdit->text());
     if (! ui->vmnameLabel->text().isEmpty()) {
-        populateVMInfos(ui->vmnameLabel->text().toStdString());
+        try {
+            populateVMInfos(ui->vmnameLabel->text().toStdString());
+        } catch (ssh::SshException e) {
+            handleDisconnect();
+        }
     }
 
     //ui->statusBar->showMessage("VM Liste aktualisiert", 2000);
@@ -411,7 +444,14 @@ void VirshGui::applySnapshot()
             string snapshotID = snapshotTable->item(items.at(0)->row(), 0)->text().toStdString();
             string hddPath = hddGroupBox->title().toStdString();
             string cmd = "qemu-img snapshot -a '" + snapshotID + "' '" + hddPath + "'";
-            string execOut = ssh->execCmd(cmd);
+
+            string execOut;
+            try {
+                execOut = ssh->execCmd(cmd);
+            } catch (ssh::SshException e) {
+                handleDisconnect();
+            }
+
             if (ssh->getLastExitCode() == 0) {
                 ui->statusBar->showMessage("Snapshot erfolgreich angewandt", 5000);
             } else {
@@ -432,7 +472,14 @@ void VirshGui::createSnapshot(string hddPath, string vmname, string snapshotName
         return;
     }
     string cmd = "qemu-img snapshot -c '" + snapshotName + "' '" + hddPath + "'";
-    string execOut = ssh->execCmd(cmd);
+
+    string execOut;
+    try {
+        execOut = ssh->execCmd(cmd);
+    } catch (ssh::SshException e) {
+        handleDisconnect();
+    }
+
     if (ssh->getLastExitCode() == 0) {
         ui->statusBar->showMessage("Snapshot Erstellt", 5000);
     } else {
@@ -440,7 +487,12 @@ void VirshGui::createSnapshot(string hddPath, string vmname, string snapshotName
                         QString::fromStdString("Fehler: " + execOut),
                         5000);
     }
-    populateVMInfos(vmname);
+
+    try {
+        populateVMInfos(vmname);
+    } catch (ssh::SshException e) {
+        handleDisconnect();
+    }
 }
 
 void VirshGui::vmChosen(int row, int column)
@@ -451,7 +503,11 @@ void VirshGui::vmChosen(int row, int column)
     Q_UNUSED(highlighter);
 
     string vmname = ui->vmListTable->item(row, 1)->text().toStdString();
-    populateVMInfos(vmname);
+    try {
+        populateVMInfos(vmname);
+    } catch (ssh::SshException e) {
+        handleDisconnect();
+    }
 }
 
 void VirshGui::toggleAddSnapshotButton(QPushButton *addSnapButton, QLineEdit *addSnapNameEdit)
@@ -467,7 +523,11 @@ void VirshGui::savexml()
 {
     string vmname = ui->vmnameLabel->text().toStdString();
     VM vm = vmlist[vmname];
-    vm.changeXML(ui->xmlDisplay->toPlainText().toStdString());
+    try {
+        vm.changeXML(ui->xmlDisplay->toPlainText().toStdString());
+    } catch (ssh::SshException e) {
+        handleDisconnect();
+    }
 
     string out = ssh->getLastStdout();
 
@@ -478,6 +538,42 @@ void VirshGui::savexml()
     } else {
         ui->statusBar->showMessage("Error couldn't save or wrong XML", 5000);
     }
+}
+
+void VirshGui::handleDisconnect()
+{
+    while (ui->vmListTable->rowCount() > 0) {
+        ui->vmListTable->removeRow(0);
+    }
+
+    ui->startStopButton->setText("keine Aktion");
+    ui->startStopButton->setDisabled(true);
+    ui->shutdownButton->setDisabled(true);
+    ui->rebootButton->setDisabled(true);
+    ui->virtViewerButton->setDisabled(true);
+
+    while (ui->snapshotsTabLayout->count() > 0) {
+        QLayoutItem *item = ui->snapshotsTabLayout->takeAt(0);
+        delete item->widget();
+        delete item;
+    }
+
+    ui->xmlDisplay->setText("");
+    ui->vmnameLabel->setText("");
+    ui->statusLabel->setText("");
+    ui->memoryLabel->setText("");
+    ui->cpucountLabel->setText("");
+    ui->typeLabel->setText("");
+    ui->archLabel->setText("");
+    ui->bootdevLabel->setText("");
+    ui->hvFeaturesLabel->setText("");
+    ui->cpuFeaturesLabel->setText("");
+
+    ui->refreshVmList->setDisabled(true);
+
+    QMessageBox disconnectBox;
+    disconnectBox.setText("Die SSH Verbindung wurde beendet.");
+    disconnectBox.exec();
 }
 
 void VirshGui::testButton()
