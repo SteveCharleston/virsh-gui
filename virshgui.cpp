@@ -109,6 +109,8 @@ void VirshGui::populateVMList(map<string, VM> vmlist)
 {
     bool listIsEmpty = ui->vmListTable->rowCount() == 0;
     int row = 0;
+
+    ui->vmListTable->setSortingEnabled(false);
     for (auto vm : vmlist) {
         if (listIsEmpty) {
             ui->vmListTable->setRowCount(row + 1);
@@ -129,6 +131,7 @@ void VirshGui::populateVMList(map<string, VM> vmlist)
 
         row++;
     }
+    ui->vmListTable->setSortingEnabled(true);
 }
 
 void VirshGui::populateBookmarkList()
