@@ -187,6 +187,7 @@ void VirshGui::vncDisplay()
 
     vncclientwidget2cls *vnc = new vncclientwidget2cls();
     vnc->connectVNCTCP(QString::fromStdString(ssh->getHost()), vncport);
+    vnc->setWindowTitle(QString::fromStdString(vm.getName()));
     vnc->showNormal();
 }
 

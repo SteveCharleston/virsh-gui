@@ -35,7 +35,7 @@ HEADERS  += virshgui.h \
     tinyxml2/tinyxml2.h\
     basic-xml-syntax-highlighter/basic-xml-syntax-highlighter/BasicXMLSyntaxHighlighter.h
 
-FORMS    += virshgui.ui
+FORMS    += virshgui.ui vnc.ui
 
 LIBS += -lssh
 
